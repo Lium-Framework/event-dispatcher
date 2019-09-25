@@ -15,12 +15,17 @@
         "psr/event-dispatcher": "^1.0"
     },
     "autoload": {
-        "Helium\\EventDispatcher\\": "src/"
+        "psr-4": {
+            "Helium\\EventDispatcher\\": "src/"
+        }
     },
     "config": {
         "preferred-install": {
             "*": "dist"
         },
         "sort-packages": true
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^4.3"
     }
 }
