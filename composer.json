@@ -1,0 +1,26 @@
+{
+    "name": "helium/event-dispatcher",
+    "description": "Standard interfaces for event handling.",
+    "type": "library",
+    "keywords": ["psr-14", "events"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Florian Hermann",
+            "email": "florian.hermann94@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2.0",
+        "psr/event-dispatcher": "^1.0"
+    },
+    "autoload": {
+        "Helium\\EventDispatcher\\": "src/"
+    },
+    "config": {
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
+    }
+}
