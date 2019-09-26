@@ -40,7 +40,7 @@ class ListenerProvider implements ListenerProviderInterface
             }
         }
 
-        dump($this->cachedListeners);
+        dump(sprintf("----- Listeners for event %s -----", $eventName), $this->cachedListeners[$eventName]);
 
         return $this->cachedListeners[$eventName];
     }

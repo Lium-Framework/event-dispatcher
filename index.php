@@ -17,21 +17,17 @@ class InvokableListener
 {
     public function __invoke(FirstEvent $event)
     {
-        dump(get_class($this));
+        dump(sprintf("-- Call in %s --", get_class($this)));
     }
 }
 
 $provider = new \Helium\EventDispatcher\ListenerProvider([
     function (FirstEvent $event) {
-        dump(FirstEvent::class);
+        dump("-- Call in FirstEvent --");
     },
     function (SecondEvent $event) {
-        dump(SecondEvent::class);
+        dump("-- Call in SecondEvent --");
     },
-    new InvokableListener(),
-]);
-
-$provider->initListeners([
     new InvokableListener(),
 ]);
 
