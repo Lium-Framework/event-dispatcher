@@ -8,18 +8,22 @@ use Psr\EventDispatcher\ListenerProviderInterface;
 
 class ListenerProvider implements ListenerProviderInterface
 {
+    /** @var array */
+    private $listenerProvidersMap;
+
     /** @var iterable */
     private $listeners;
 
     /** @var array */
     private $cachedListeners;
 
-    /** @var \ReflectionFunction[] */
+    /** @var string[] */
     private $listenersParameterMap;
 
     public function __construct(iterable $listeners)
     {
-        $this->initListeners($listeners);
+        $this->listenerProvidersMap = [];
+        $this->registerListeners($listeners);
     }
 
     /**
@@ -45,7 +49,7 @@ class ListenerProvider implements ListenerProviderInterface
         return $this->cachedListeners[$eventName];
     }
 
-    public function initListeners(iterable $listeners): void
+    public function registerListeners(iterable $listeners): void
     {
         $this->listeners = $listeners;
         $this->cachedListeners = [];
@@ -65,5 +69,10 @@ class ListenerProvider implements ListenerProviderInterface
 
             $this->listenersParameterMap[$key] = $class->getName();
         }
+    }
+
+    public function registerListenerProviderForEvent(string $eventName, ListenerProviderInterface $listenerProvider)
+    {
+        $this->listenerProvidersMap[$eventName] = $listenerProvider;
     }
 }
