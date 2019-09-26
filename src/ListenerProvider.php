@@ -32,7 +32,11 @@ class ListenerProvider implements ListenerProviderInterface
     public function getListenersForEvent(object $event): iterable
     {
         $eventName = get_class($event);
-        get_parent_class($event);
+
+        $subListenerProvider = $this->listenerProvidersMap[$eventName] ?? null;
+        if ($subListenerProvider && $subListenerProvider instanceof ListenerProviderInterface) {
+            return $subListenerProvider->getListenersForEvent($event);
+        }
 
         if (!isset($this->cachedListeners[$eventName])) {
             $this->cachedListeners[$eventName] = [];
