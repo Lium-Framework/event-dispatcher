@@ -31,6 +31,10 @@ $provider = new \Helium\EventDispatcher\ListenerProvider([
     new InvokableListener(),
 ]);
 
+$provider->initListeners([
+    new InvokableListener(),
+]);
+
 $eventDispatcher = new \Helium\EventDispatcher\EventDispatcher($provider);
 
 $eventDispatcher->dispatch(new ThirdEvent());

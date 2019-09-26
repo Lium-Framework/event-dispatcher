@@ -15,18 +15,11 @@ class ListenerProvider implements ListenerProviderInterface
     private $cachedListeners;
 
     /** @var \ReflectionFunction[] */
-    private $cachedListenersReflectionFunctions;
+    private $listenersParameterMap;
 
     public function __construct(iterable $listeners)
     {
-        $this->listeners = $listeners;
-        $this->cachedListeners = [];
-        $this->cachedListenersReflectionFunctions = [];
-
-        foreach ($listeners as $key => $listener) {
-            $closure = \Closure::fromCallable($listener);
-            $this->cachedListenersReflectionFunctions[$key] = new \ReflectionFunction($closure);
-        }
+        $this->initListeners($listeners);
     }
 
     /**
@@ -41,17 +34,7 @@ class ListenerProvider implements ListenerProviderInterface
             $this->cachedListeners[$eventName] = [];
 
             foreach ($this->listeners as $key => $listener) {
-                $reflectionFunction = $this->cachedListenersReflectionFunctions[$key];
-
-                if (!$reflectionParameter = $reflectionFunction->getParameters()[0] ?? null) {
-                    continue;
-                }
-
-                if (!$class = $reflectionParameter->getClass()) {
-                    continue;
-                }
-
-                if (is_a($event, $class->getName())) {
+                if (is_a($event, $this->listenersParameterMap[$key])) {
                     $this->cachedListeners[$eventName][] = $listener;
                 }
             }
@@ -60,5 +43,27 @@ class ListenerProvider implements ListenerProviderInterface
         dump($this->cachedListeners);
 
         return $this->cachedListeners[$eventName];
+    }
+
+    public function initListeners(iterable $listeners): void
+    {
+        $this->listeners = $listeners;
+        $this->cachedListeners = [];
+        $this->listenersParameterMap = [];
+
+        foreach ($listeners as $key => $listener) {
+            $closure = \Closure::fromCallable($listener);
+            $reflectionFunction = new \ReflectionFunction($closure);
+
+            if (!$reflectionParameter = $reflectionFunction->getParameters()[0] ?? null) {
+                continue;
+            }
+
+            if (!$class = $reflectionParameter->getClass()) {
+                continue;
+            }
+
+            $this->listenersParameterMap[$key] = $class->getName();
+        }
     }
 }
