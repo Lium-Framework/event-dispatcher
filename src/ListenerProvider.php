@@ -33,14 +33,13 @@ class ListenerProvider implements ListenerProviderInterface
     {
         $eventName = get_class($event);
 
-        $subListenerProvider = $this->listenerProvidersMap[$eventName] ?? null;
-        if ($subListenerProvider && $subListenerProvider instanceof ListenerProviderInterface) {
-            return $subListenerProvider->getListenersForEvent($event);
-        }
-
         if (!isset($this->cachedListeners[$eventName])) {
-            $this->cachedListeners[$eventName] = [];
+            $subListenerProvider = $this->listenerProvidersMap[$eventName] ?? null;
+            if ($subListenerProvider && $subListenerProvider instanceof ListenerProviderInterface) {
+                return $this->cachedListeners[$eventName] = $subListenerProvider->getListenersForEvent($event);
+            }
 
+            $this->cachedListeners[$eventName] = [];
             foreach ($this->listeners as $key => $listener) {
                 if (is_a($event, $this->listenersParameterMap[$key])) {
                     $this->cachedListeners[$eventName][] = $listener;
