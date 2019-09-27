@@ -6,7 +6,7 @@ namespace Helium\EventDispatcher\ListenerProvider;
 
 use Psr\EventDispatcher\ListenerProviderInterface;
 
-class ListenerProvider implements ListenerProviderInterface
+final class ListenerProvider implements ListenerProviderInterface
 {
     /** @var iterable */
     private $listeners;
