@@ -6,6 +6,9 @@ namespace Helium\EventDispatcher\ListenerProvider;
 
 use Psr\EventDispatcher\ListenerProviderInterface;
 
+/**
+ * The strict listener provider implementation as explained in the PSR-14.
+ */
 final class ListenerProvider implements ListenerProviderInterface
 {
     /** @var iterable */
@@ -17,6 +20,11 @@ final class ListenerProvider implements ListenerProviderInterface
     /** @var array */
     private $cachedListeners;
 
+    /**
+     * ListenerProvider constructor.
+     *
+     * @param iterable $listeners
+     */
     public function __construct(iterable $listeners)
     {
         $this->listeners = $listeners;

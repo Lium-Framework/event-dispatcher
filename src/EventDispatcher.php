@@ -8,11 +8,19 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
 
+/**
+ * The strict event dispatcher implementation as explained in the PSR-14.
+ */
 final class EventDispatcher implements EventDispatcherInterface
 {
     /** @var ListenerProviderInterface */
     private $listenerProvider;
 
+    /**
+     * EventDispatcher constructor.
+     *
+     * @param ListenerProviderInterface $listenerProvider
+     */
     public function __construct(ListenerProviderInterface $listenerProvider)
     {
         $this->listenerProvider = $listenerProvider;

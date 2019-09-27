@@ -21,6 +21,12 @@ final class DelegatorListenerProvider implements ListenerProviderInterface
     /** @var array */
     private $cachedListeners;
 
+    /**
+     * DelegatorListenerProvider constructor.
+     *
+     * @param ListenerProviderInterface $baseListenerProvider
+     * @param array $subListenerProvidersMap
+     */
     public function __construct(ListenerProviderInterface $baseListenerProvider, array $subListenerProvidersMap)
     {
         $this->baseListenerProvider = $baseListenerProvider;
