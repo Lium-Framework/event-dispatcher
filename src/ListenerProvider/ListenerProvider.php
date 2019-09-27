@@ -2,28 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Helium\EventDispatcher;
+namespace Helium\EventDispatcher\ListenerProvider;
 
 use Psr\EventDispatcher\ListenerProviderInterface;
 
 class ListenerProvider implements ListenerProviderInterface
 {
-    /** @var array */
-    private $listenerProvidersMap;
-
     /** @var iterable */
     private $listeners;
-
-    /** @var array */
-    private $cachedListeners;
 
     /** @var string[] */
     private $listenersParameterMap;
 
+    /** @var array */
+    private $cachedListeners;
+
     public function __construct(iterable $listeners)
     {
-        $this->listenerProvidersMap = [];
-        $this->registerListeners($listeners);
+        $this->listeners = $listeners;
     }
 
     /**
@@ -31,14 +27,13 @@ class ListenerProvider implements ListenerProviderInterface
      */
     public function getListenersForEvent(object $event): iterable
     {
+        if (null === $this->listenersParameterMap) {
+            $this->registerListeners($this->listeners);
+        }
+
         $eventName = get_class($event);
 
         if (!isset($this->cachedListeners[$eventName])) {
-            $subListenerProvider = $this->listenerProvidersMap[$eventName] ?? null;
-            if ($subListenerProvider && $subListenerProvider instanceof ListenerProviderInterface) {
-                return $this->cachedListeners[$eventName] = $subListenerProvider->getListenersForEvent($event);
-            }
-
             $this->cachedListeners[$eventName] = [];
             foreach ($this->listeners as $key => $listener) {
                 if (is_a($event, $this->listenersParameterMap[$key])) {
@@ -72,10 +67,5 @@ class ListenerProvider implements ListenerProviderInterface
 
             $this->listenersParameterMap[$key] = $class->getName();
         }
-    }
-
-    public function registerListenerProviderForEvent(string $eventName, ListenerProviderInterface $listenerProvider)
-    {
-        $this->listenerProvidersMap[$eventName] = $listenerProvider;
     }
 }

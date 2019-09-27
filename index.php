@@ -21,7 +21,7 @@ class InvokableListener
     }
 }
 
-$provider = new \Helium\EventDispatcher\ListenerProvider([
+$provider = new \Helium\EventDispatcher\ListenerProvider\ListenerProvider([
     function (FirstEvent $event) {
         dump("-- Call in FirstEvent --");
     },
