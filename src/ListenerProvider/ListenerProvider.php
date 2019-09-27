@@ -11,19 +11,17 @@ use Psr\EventDispatcher\ListenerProviderInterface;
  */
 final class ListenerProvider implements ListenerProviderInterface
 {
-    /** @var iterable */
+    /** @var iterable<callable> */
     private $listeners;
 
     /** @var string[] */
-    private $listenersParameterMap;
+    private $listenerParameterMap;
 
-    /** @var array */
+    /** @var array<string, iterable<callable>> */
     private $cachedListeners;
 
     /**
-     * ListenerProvider constructor.
-     *
-     * @param iterable $listeners
+     * @param iterable<callable> $listeners
      */
     public function __construct(iterable $listeners)
     {
@@ -35,8 +33,8 @@ final class ListenerProvider implements ListenerProviderInterface
      */
     public function getListenersForEvent(object $event): iterable
     {
-        if (null === $this->listenersParameterMap) {
-            $this->registerListeners($this->listeners);
+        if (null === $this->listenerParameterMap) {
+            $this->prepareListenerParameterMap();
         }
 
         $eventName = get_class($event);
@@ -44,24 +42,41 @@ final class ListenerProvider implements ListenerProviderInterface
         if (!isset($this->cachedListeners[$eventName])) {
             $this->cachedListeners[$eventName] = [];
             foreach ($this->listeners as $key => $listener) {
-                if (is_a($event, $this->listenersParameterMap[$key])) {
+                if (is_a($event, $this->listenerParameterMap[$key])) {
                     $this->cachedListeners[$eventName][] = $listener;
                 }
             }
         }
 
-        dump(sprintf("----- Listeners for event %s -----", $eventName), $this->cachedListeners[$eventName]);
-
         return $this->cachedListeners[$eventName];
     }
 
-    public function registerListeners(iterable $listeners): void
+    /**
+     * This method is here to allow to change the listeners after the initialization in an immutable way
+     *
+     * @param iterable $listeners
+     *
+     * @return $this
+     */
+    public function withListeners(iterable $listeners): self
     {
-        $this->listeners = $listeners;
-        $this->cachedListeners = [];
-        $this->listenersParameterMap = [];
+        $new = clone $this;
+        $new->listeners = $listeners;
+        $new->cachedListeners = null;
+        $new->listenerParameterMap = null;
 
-        foreach ($listeners as $key => $listener) {
+        return $new;
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    private function prepareListenerParameterMap(): void
+    {
+        $this->cachedListeners = [];
+        $this->listenerParameterMap = [];
+
+        foreach ($this->listeners as $key => $listener) {
             $closure = \Closure::fromCallable($listener);
             $reflectionFunction = new \ReflectionFunction($closure);
 
@@ -73,7 +88,7 @@ final class ListenerProvider implements ListenerProviderInterface
                 continue;
             }
 
-            $this->listenersParameterMap[$key] = $class->getName();
+            $this->listenerParameterMap[$key] = $class->getName();
         }
     }
 }

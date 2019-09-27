@@ -7,25 +7,23 @@ namespace Helium\EventDispatcher\ListenerProvider;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
 /**
- * This ListenerProvider decorate an other one in order to register sub listener providers to handle an event given by its name.
- * It delegates its responsabilities to the sub listeners.
+ * This ListenerProvider decorate an other one in order to register sub listener providers to handle an event given by
+ * its name. It delegates its responsibilities to the sub listeners.
  */
 final class DelegatorListenerProvider implements ListenerProviderInterface
 {
     /** @var ListenerProviderInterface */
     private $baseListenerProvider;
 
-    /** @var array */
+    /** @var array<string, array<ListenerProviderInterface>> */
     private $subListenerProvidersMap;
 
-    /** @var array */
+    /** @var array<string, iterable<callable>> */
     private $cachedListeners;
 
     /**
-     * DelegatorListenerProvider constructor.
-     *
      * @param ListenerProviderInterface $baseListenerProvider
-     * @param array $subListenerProvidersMap
+     * @param array<string, array<ListenerProviderInterface>> $subListenerProvidersMap
      */
     public function __construct(ListenerProviderInterface $baseListenerProvider, array $subListenerProvidersMap)
     {

@@ -17,8 +17,6 @@ final class EventDispatcher implements EventDispatcherInterface
     private $listenerProvider;
 
     /**
-     * EventDispatcher constructor.
-     *
      * @param ListenerProviderInterface $listenerProvider
      */
     public function __construct(ListenerProviderInterface $listenerProvider)
