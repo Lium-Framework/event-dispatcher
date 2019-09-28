@@ -42,7 +42,8 @@ final class ListenerProvider implements ListenerProviderInterface
         if (!isset($this->cachedListeners[$eventName])) {
             $this->cachedListeners[$eventName] = [];
             foreach ($this->listeners as $key => $listener) {
-                if (is_a($event, $this->listenerParameterMap[$key])) {
+                $listenerParameterClass = $this->listenerParameterMap[$key] ?? null;
+                if ($listenerParameterClass && is_a($event, $listenerParameterClass)) {
                     $this->cachedListeners[$eventName][] = $listener;
                 }
             }
