@@ -7,28 +7,25 @@ namespace Helium\EventDispatcher\ListenerProvider;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
 /**
- * This ListenerProvider decorate an other one in order to register sub listener providers to handle an event given by
- * its name. It delegates its responsibilities to the sub listeners.
+ * This ListenerProvider delegated its responsibilities to sub listeners and store the results.
  */
 final class DelegatorListenerProvider implements ListenerProviderInterface
 {
-    /** @var ListenerProviderInterface */
-    private $baseListenerProvider;
+    /** @var ListenerProviderInterface[] */
+    private $subListenerProviders;
 
-    /** @var array<string, array<ListenerProviderInterface>> */
-    private $subListenerProvidersMap;
-
-    /** @var array<string, iterable<callable>> */
+    /** @var array<string, array<callable>> */
     private $cachedListeners;
 
     /**
-     * @param ListenerProviderInterface $baseListenerProvider
-     * @param array<string, array<ListenerProviderInterface>> $subListenerProvidersMap
+     * @param iterable<ListenerProviderInterface> $subListenerProviders
      */
-    public function __construct(ListenerProviderInterface $baseListenerProvider, array $subListenerProvidersMap)
-    {
-        $this->baseListenerProvider = $baseListenerProvider;
-        $this->subListenerProvidersMap = $subListenerProvidersMap;
+    public function __construct(
+        iterable $subListenerProviders
+    ) {
+        $this->subListenerProviders = $subListenerProviders instanceof \Traversable
+            ? iterator_to_array($subListenerProviders)
+            : $subListenerProviders;
     }
 
     /**
@@ -39,12 +36,12 @@ final class DelegatorListenerProvider implements ListenerProviderInterface
         $eventName = get_class($event);
 
         if (!isset($this->cachedListeners[$eventName])) {
-            $subListenerProvider = $this->subListenerProvidersMap[$eventName] ?? null;
-            if ($subListenerProvider && $subListenerProvider instanceof ListenerProviderInterface) {
-                return $this->cachedListeners[$eventName] = $subListenerProvider->getListenersForEvent($event);
+            $this->cachedListeners[$eventName] = [];
+            foreach ($this->subListenerProviders as $subListenerProvider) {
+                $this->cachedListeners[$eventName][] = $subListenerProvider->getListenersForEvent($event);
             }
 
-            $this->cachedListeners[$eventName] = $this->baseListenerProvider->getListenersForEvent($event);
+            $this->cachedListeners[$eventName] = array_merge(...$this->cachedListeners[$eventName]);
         }
 
         return $this->cachedListeners[$eventName];

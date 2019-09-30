@@ -7,17 +7,18 @@ namespace Helium\EventDispatcher\ListenerProvider;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
 /**
- * The strict listener provider implementation as explained in the PSR-14.
+ * A default listener parameter implementation.
+ * It will check the listener first argument type to determine if the listener match the event.
  */
-final class ListenerProvider implements ListenerProviderInterface
+final class DefaultListenerProvider implements ListenerProviderInterface
 {
-    /** @var iterable<callable> */
+    /** @var array<callable> */
     private $listeners;
 
-    /** @var string[] */
+    /** @var array<int, string> */
     private $listenerParameterMap;
 
-    /** @var array<string, iterable<callable>> */
+    /** @var array<string, array<callable>> */
     private $cachedListeners;
 
     /**
@@ -25,7 +26,9 @@ final class ListenerProvider implements ListenerProviderInterface
      */
     public function __construct(iterable $listeners)
     {
-        $this->listeners = $listeners;
+        $this->listeners = $listeners instanceof \Traversable
+            ? iterator_to_array($listeners)
+            : $listeners;
     }
 
     /**
@@ -52,23 +55,10 @@ final class ListenerProvider implements ListenerProviderInterface
     }
 
     /**
-     * This method is here to allow to change the listeners after the initialization in an immutable way
+     * Prepare a map between a listener key and the listener first parameter class name thanks to \ReflectionFunction.
+     * If the listener has no parameter or if this parameter is not type-hinted with a class name, the listener is
+     * removed from the stack.
      *
-     * @param iterable $listeners
-     *
-     * @return $this
-     */
-    public function withListeners(iterable $listeners): self
-    {
-        $new = clone $this;
-        $new->listeners = $listeners;
-        $new->cachedListeners = null;
-        $new->listenerParameterMap = null;
-
-        return $new;
-    }
-
-    /**
      * @throws \ReflectionException
      */
     private function prepareListenerParameterMap(): void
@@ -81,10 +71,12 @@ final class ListenerProvider implements ListenerProviderInterface
             $reflectionFunction = new \ReflectionFunction($closure);
 
             if (!$reflectionParameter = $reflectionFunction->getParameters()[0] ?? null) {
+                unset($this->listeners[$key]);
                 continue;
             }
 
             if (!$class = $reflectionParameter->getClass()) {
+                unset($this->listeners[$key]);
                 continue;
             }
 

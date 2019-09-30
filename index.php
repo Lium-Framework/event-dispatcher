@@ -17,19 +17,36 @@ class InvokableListener
 {
     public function __invoke(FirstEvent $event)
     {
-        dump(sprintf("-- Call in %s --", get_class($this)));
+        dump(sprintf('-- Call with invokable %s --', get_class($this)));
     }
 }
 
-$provider = new \Helium\EventDispatcher\ListenerProvider\ListenerProvider([
+function getIterator() {
+    for ($i = 0; $i < 10; $i++) {
+        if ($i % 3 === 0) {
+            yield new InvokableListener();
+        } elseif ($i % 3 === 1) {
+            yield function (SecondEvent $event) {
+                dump('-- Call with SecondEvent --');
+            };
+        } elseif ($i % 3 === 2) {
+            yield function ($event) {};
+        }
+    }
+}
+
+$arrayListeners = [
     function (FirstEvent $event) {
-        dump("-- Call in FirstEvent --");
+        dump('-- Call with FirstEvent --');
     },
+    function () {},
     function (SecondEvent $event) {
-        dump("-- Call in SecondEvent --");
+        dump('-- Call with SecondEvent --');
     },
     new InvokableListener(),
-]);
+];
+
+$provider = new \Helium\EventDispatcher\ListenerProvider\DefaultListenerProvider(getIterator());
 
 $eventDispatcher = new \Helium\EventDispatcher\EventDispatcher($provider);
 
