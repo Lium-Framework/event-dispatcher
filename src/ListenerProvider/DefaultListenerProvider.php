@@ -45,8 +45,7 @@ final class DefaultListenerProvider implements ListenerProviderInterface
         if (!isset($this->cachedListeners[$eventName])) {
             $this->cachedListeners[$eventName] = [];
             foreach ($this->listeners as $key => $listener) {
-                $listenerParameterClass = $this->listenerParameterMap[$key] ?? null;
-                if ($listenerParameterClass && is_a($event, $listenerParameterClass)) {
+                if (is_a($event, $this->listenerParameterMap[$key])) {
                     $this->cachedListeners[$eventName][] = $listener;
                 }
             }
