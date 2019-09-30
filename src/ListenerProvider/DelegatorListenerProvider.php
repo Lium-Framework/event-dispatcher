@@ -20,9 +20,8 @@ final class DelegatorListenerProvider implements ListenerProviderInterface
     /**
      * @param iterable<ListenerProviderInterface> $subListenerProviders
      */
-    public function __construct(
-        iterable $subListenerProviders
-    ) {
+    public function __construct(iterable $subListenerProviders)
+    {
         $this->subListenerProviders = $subListenerProviders instanceof \Traversable
             ? iterator_to_array($subListenerProviders)
             : $subListenerProviders;
