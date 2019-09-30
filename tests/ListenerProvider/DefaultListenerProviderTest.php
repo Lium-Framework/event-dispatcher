@@ -2,11 +2,11 @@
 
 namespace Helium\EventDispatcher\Test\ListenerProvider;
 
-use Helium\EventDispatcher\ListenerProvider\ListenerProvider;
+use Helium\EventDispatcher\ListenerProvider\DefaultListenerProvider;
 use Helium\EventDispatcher\Test\Event\ImmutableEvent;
 use PHPUnit\Framework\TestCase;
 
-class ListenerProviderTest extends TestCase
+class DefaultListenerProviderTest extends TestCase
 {
     public function test_get_listeners_for_event_match()
     {
@@ -15,7 +15,7 @@ class ListenerProviderTest extends TestCase
             }
         ];
 
-        $listenerProvider = new ListenerProvider($listeners);
+        $listenerProvider = new DefaultListenerProvider($listeners);
 
         $this->assertSame($listeners, $listenerProvider->getListenersForEvent(new ImmutableEvent('Value')));
     }
@@ -27,7 +27,7 @@ class ListenerProviderTest extends TestCase
             }
         ];
 
-        $listenerProvider = new ListenerProvider($listeners);
+        $listenerProvider = new DefaultListenerProvider($listeners);
 
         $this->assertSame([], $listenerProvider->getListenersForEvent(new ImmutableEvent('Value')));
     }
