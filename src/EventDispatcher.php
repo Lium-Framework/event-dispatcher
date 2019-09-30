@@ -9,7 +9,7 @@ use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
 
 /**
- * The strict event dispatcher implementation as explained in the PSR-14.
+ * The strict PSR-14 event dispatcher implementation.
  */
 final class EventDispatcher implements EventDispatcherInterface
 {
