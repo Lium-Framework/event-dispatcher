@@ -3,7 +3,6 @@
 namespace Helium\EventDispatcher\Test;
 
 use Helium\EventDispatcher\EventDispatcher;
-use Helium\EventDispatcher\Test\Event\ImmutableEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\ListenerProviderInterface;
@@ -18,7 +17,7 @@ class EventDispatcherTest extends TestCase
             ->getMock();
 
         $listeners = [
-            function (ImmutableEvent $event) {
+            function (object $event) {
             }
         ];
 
@@ -26,7 +25,7 @@ class EventDispatcherTest extends TestCase
 
         $eventDispatcher = new EventDispatcher($mockListenerProvider);
 
-        $event = new ImmutableEvent('Value');
+        $event = new class {};
 
         $this->assertSame($event, $eventDispatcher->dispatch($event));
     }
