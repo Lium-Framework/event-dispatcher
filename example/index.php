@@ -2,16 +2,20 @@
 
 namespace Test;
 
-require 'vendor/autoload.php';
+require '../vendor/autoload.php';
 
 class FirstEvent
 {
     private $isTest = true;
 }
 
-class SecondEvent extends FirstEvent {}
+class SecondEvent extends FirstEvent
+{
+}
 
-class ThirdEvent {}
+class ThirdEvent
+{
+}
 
 class InvokableListener
 {
@@ -21,7 +25,8 @@ class InvokableListener
     }
 }
 
-function getIterator() {
+function getIterator()
+{
     for ($i = 0; $i < 10; $i++) {
         if ($i % 3 === 0) {
             yield new InvokableListener();
@@ -30,7 +35,8 @@ function getIterator() {
                 dump('-- Call with SecondEvent --');
             };
         } elseif ($i % 3 === 2) {
-            yield function ($event) {};
+            yield function ($event) {
+            };
         }
     }
 }
@@ -39,7 +45,8 @@ $arrayListeners = [
     function (FirstEvent $event) {
         dump('-- Call with FirstEvent --');
     },
-    function () {},
+    function () {
+    },
     function (SecondEvent $event) {
         dump('-- Call with SecondEvent --');
     },

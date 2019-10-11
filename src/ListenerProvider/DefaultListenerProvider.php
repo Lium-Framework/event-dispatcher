@@ -12,11 +12,11 @@ use Psr\EventDispatcher\ListenerProviderInterface;
  */
 final class DefaultListenerProvider implements ListenerProviderInterface
 {
-    /** @var array<callable> */
+    /** @var callable[] */
     private $listeners;
 
     /** @var array<int, string> */
-    private $listenerParameterMap;
+    private $listenerArgumentMap;
 
     /** @var array<string, array<callable>> */
     private $cachedListeners;
@@ -36,7 +36,7 @@ final class DefaultListenerProvider implements ListenerProviderInterface
      */
     public function getListenersForEvent(object $event): iterable
     {
-        if (null === $this->listenerParameterMap) {
+        if (null === $this->listenerArgumentMap) {
             $this->prepareListenerParameterMap();
         }
 
@@ -44,8 +44,11 @@ final class DefaultListenerProvider implements ListenerProviderInterface
 
         if (!isset($this->cachedListeners[$eventName])) {
             $this->cachedListeners[$eventName] = [];
+
             foreach ($this->listeners as $key => $listener) {
-                if (is_a($event, $this->listenerParameterMap[$key])) {
+                $listenerArgumentType = $this->listenerArgumentMap[$key];
+
+                if ($event instanceof $listenerArgumentType) {
                     $this->cachedListeners[$eventName][] = $listener;
                 }
             }
@@ -64,7 +67,7 @@ final class DefaultListenerProvider implements ListenerProviderInterface
     private function prepareListenerParameterMap(): void
     {
         $this->cachedListeners = [];
-        $this->listenerParameterMap = [];
+        $this->listenerArgumentMap = [];
 
         foreach ($this->listeners as $key => $listener) {
             $closure = \Closure::fromCallable($listener);
@@ -80,7 +83,7 @@ final class DefaultListenerProvider implements ListenerProviderInterface
                 continue;
             }
 
-            $this->listenerParameterMap[$key] = $class->getName();
+            $this->listenerArgumentMap[$key] = $class->getName();
         }
     }
 }

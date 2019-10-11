@@ -7,9 +7,9 @@ namespace Helium\EventDispatcher\ListenerProvider;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
 /**
- * This ListenerProvider delegated its responsibilities to sub listeners and store the results.
+ * This ListenerProvider delegates its responsibilities to other listeners providers and store the results.
  */
-final class DelegatorListenerProvider implements ListenerProviderInterface
+final class DelegatingListenerProvider implements ListenerProviderInterface
 {
     /** @var ListenerProviderInterface[] */
     private $subListenerProviders;
