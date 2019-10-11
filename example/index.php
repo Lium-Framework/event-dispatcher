@@ -1,20 +1,21 @@
 <?php
 
-namespace Test;
+use Helium\EventDispatcher\StoppableEventTrait;
+use Psr\EventDispatcher\StoppableEventInterface;
 
 require '../vendor/autoload.php';
 
 class FirstEvent
 {
-    private $isTest = true;
 }
 
 class SecondEvent extends FirstEvent
 {
 }
 
-class ThirdEvent
+class ThirdEvent implements StoppableEventInterface
 {
+    use StoppableEventTrait;
 }
 
 class InvokableListener
@@ -35,7 +36,7 @@ function getIterator()
                 dump('-- Call with SecondEvent --');
             };
         } elseif ($i % 3 === 2) {
-            yield function ($event) {
+            yield function (object $event) {
             };
         }
     }

@@ -19,7 +19,7 @@ final class DefaultListenerProvider implements ListenerProviderInterface
     private $listenerArgumentMap;
 
     /** @var array<string, array<callable>> */
-    private $cachedListeners;
+    private $listenersForEventsStorage;
 
     /**
      * @param iterable<callable> $listeners
@@ -42,31 +42,31 @@ final class DefaultListenerProvider implements ListenerProviderInterface
 
         $eventName = get_class($event);
 
-        if (!isset($this->cachedListeners[$eventName])) {
-            $this->cachedListeners[$eventName] = [];
+        if (!isset($this->listenersForEventsStorage[$eventName])) {
+            $this->listenersForEventsStorage[$eventName] = [];
 
             foreach ($this->listeners as $key => $listener) {
                 $listenerArgumentType = $this->listenerArgumentMap[$key];
 
-                if ($event instanceof $listenerArgumentType) {
-                    $this->cachedListeners[$eventName][] = $listener;
+                if ($event instanceof $listenerArgumentType || 'object' === $listenerArgumentType) {
+                    $this->listenersForEventsStorage[$eventName][] = $listener;
                 }
             }
         }
 
-        return $this->cachedListeners[$eventName];
+        return $this->listenersForEventsStorage[$eventName];
     }
 
     /**
      * Prepare a map between a listener key and the listener first parameter class name thanks to \ReflectionFunction.
-     * If the listener has no parameter or if this parameter is not type-hinted with a class name, the listener is
-     * removed from the stack.
+     * If the listener has no parameter or if this parameter is not type-hinted with a class name or with "object", the
+     * listener is removed from the stack.
      *
      * @throws \ReflectionException
      */
     private function prepareListenerParameterMap(): void
     {
-        $this->cachedListeners = [];
+        $this->listenersForEventsStorage = [];
         $this->listenerArgumentMap = [];
 
         foreach ($this->listeners as $key => $listener) {
@@ -78,12 +78,18 @@ final class DefaultListenerProvider implements ListenerProviderInterface
                 continue;
             }
 
-            if (!$class = $reflectionParameter->getClass()) {
+            if (!$type = $reflectionParameter->getType()) {
                 unset($this->listeners[$key]);
                 continue;
             }
 
-            $this->listenerArgumentMap[$key] = $class->getName();
+            $typeName = $type->getName();
+            if ('object' !== $typeName && !$reflectionParameter->getClass()) {
+                unset($this->listeners[$key]);
+                continue;
+            }
+
+            $this->listenerArgumentMap[$key] = $typeName;
         }
     }
 }

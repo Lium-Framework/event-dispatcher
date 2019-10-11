@@ -15,7 +15,7 @@ final class DelegatingListenerProvider implements ListenerProviderInterface
     private $subListenerProviders;
 
     /** @var array<string, array<callable>> */
-    private $cachedListeners;
+    private $listenersForEventsStorage;
 
     /**
      * @param iterable<ListenerProviderInterface> $subListenerProviders
@@ -34,15 +34,15 @@ final class DelegatingListenerProvider implements ListenerProviderInterface
     {
         $eventName = get_class($event);
 
-        if (!isset($this->cachedListeners[$eventName])) {
-            $this->cachedListeners[$eventName] = [];
+        if (!isset($this->listenersForEventsStorage[$eventName])) {
+            $this->listenersForEventsStorage[$eventName] = [];
             foreach ($this->subListenerProviders as $subListenerProvider) {
-                $this->cachedListeners[$eventName][] = $subListenerProvider->getListenersForEvent($event);
+                $this->listenersForEventsStorage[$eventName][] = $subListenerProvider->getListenersForEvent($event);
             }
 
-            $this->cachedListeners[$eventName] = array_merge(...$this->cachedListeners[$eventName]);
+            $this->listenersForEventsStorage[$eventName] = array_merge(...$this->listenersForEventsStorage[$eventName]);
         }
 
-        return $this->cachedListeners[$eventName];
+        return $this->listenersForEventsStorage[$eventName];
     }
 }
