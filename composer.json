@@ -1,6 +1,6 @@
 {
     "name": "helium/event-dispatcher",
-    "description": "Standard interfaces for event handling.",
+    "description": "Standard implementation of PSR-14 for event handling.",
     "type": "library",
     "keywords": ["psr-14", "events"],
     "license": "MIT",
