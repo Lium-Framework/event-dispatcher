@@ -22,9 +22,8 @@ final class DelegatingListenerProvider implements ListenerProviderInterface
      */
     public function __construct(iterable $subListenerProviders)
     {
-        $this->subListenerProviders = $subListenerProviders instanceof \Traversable
-            ? iterator_to_array($subListenerProviders)
-            : $subListenerProviders;
+        $this->subListenerProviders = $this->iterableToArray($subListenerProviders);
+        $this->listenersForEventsStorage = [];
     }
 
     /**
@@ -36,13 +35,28 @@ final class DelegatingListenerProvider implements ListenerProviderInterface
 
         if (!isset($this->listenersForEventsStorage[$eventName])) {
             $this->listenersForEventsStorage[$eventName] = [];
+
+            $temporaryListenersForEvent = [];
             foreach ($this->subListenerProviders as $subListenerProvider) {
-                $this->listenersForEventsStorage[$eventName][] = $subListenerProvider->getListenersForEvent($event);
+                $temporaryListenersForEvent[] = $this->iterableToArray(
+                    $subListenerProvider->getListenersForEvent($event)
+                );
             }
 
-            $this->listenersForEventsStorage[$eventName] = array_merge(...$this->listenersForEventsStorage[$eventName]);
+            if ([] !== $temporaryListenersForEvent) {
+                $this->listenersForEventsStorage[$eventName] = array_merge(...$temporaryListenersForEvent);
+            }
         }
 
         return $this->listenersForEventsStorage[$eventName];
+    }
+
+    private function iterableToArray(iterable $iterable): array
+    {
+        if ($iterable instanceof \Traversable) {
+            $iterable = iterator_to_array($iterable);
+        }
+
+        return $iterable;
     }
 }

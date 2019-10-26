@@ -29,6 +29,7 @@ final class EventDispatcher implements EventDispatcherInterface
      */
     public function dispatch(object $event): object
     {
+        /** @var callable[] $listeners */
         $listeners = $this->listenerProvider->getListenersForEvent($event);
         $eventIsStoppable = $event instanceof StoppableEventInterface;
 

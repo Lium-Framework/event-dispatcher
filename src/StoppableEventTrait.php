@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Helium\EventDispatcher;
 
 /**
- * A basic trait to implement the StoppableEventInterface.
+ * A trait to implement the StoppableEventInterface.
  * An alternative could be to implement the method isPropagationStopped() with dynamic data from the event.
  */
 trait StoppableEventTrait

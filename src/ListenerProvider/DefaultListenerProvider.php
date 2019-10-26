@@ -15,7 +15,7 @@ final class DefaultListenerProvider implements ListenerProviderInterface
     /** @var callable[] */
     private $listeners;
 
-    /** @var array<int, string> */
+    /** @var array<int, string>|null */
     private $listenerArgumentMap;
 
     /** @var array<string, array<callable>> */
@@ -26,9 +26,9 @@ final class DefaultListenerProvider implements ListenerProviderInterface
      */
     public function __construct(iterable $listeners)
     {
-        $this->listeners = $listeners instanceof \Traversable
-            ? iterator_to_array($listeners)
-            : $listeners;
+        $this->listeners = $this->iterableToArray($listeners);
+        $this->listenerArgumentMap = null;
+        $this->listenersForEventsStorage = [];
     }
 
     /**
@@ -91,5 +91,14 @@ final class DefaultListenerProvider implements ListenerProviderInterface
 
             $this->listenerArgumentMap[$key] = $typeName;
         }
+    }
+
+    private function iterableToArray(iterable $iterable): array
+    {
+        if ($iterable instanceof \Traversable) {
+            $iterable = iterator_to_array($iterable);
+        }
+
+        return $iterable;
     }
 }
