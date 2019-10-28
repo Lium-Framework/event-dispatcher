@@ -41,6 +41,7 @@ final class DelegatingListenerProvider implements ListenerProviderInterface
                 $listenersForCurrentEvent[] = $this->iterableToArray($subListenerProvider->getListenersForEvent($event));
             }
 
+            // This check will not be necessary anymore in PHP 7.4
             if ([] !== $listenersForCurrentEvent) {
                 $this->runtimeStorage[$eventName] = array_merge(...$listenersForCurrentEvent);
             }
