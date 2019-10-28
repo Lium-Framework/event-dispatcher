@@ -27,7 +27,6 @@ final class DefaultListenerProvider implements ListenerProviderInterface
     public function __construct(iterable $listeners)
     {
         $this->listeners = $this->iterableToArray($listeners);
-        $this->listenerArgumentMap = null;
         $this->listenersForEventsStorage = [];
     }
 
