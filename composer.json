@@ -34,5 +34,13 @@
             "*": "dist"
         },
         "sort-packages": true
+    },
+    "scripts": {
+        "test:unit": "phpunit --bootstrap vendor/autoload.php tests/",
+        "test:static": "psalm",
+        "test":[
+            "@test:static",
+            "@test:unit"
+        ]
     }
 }
