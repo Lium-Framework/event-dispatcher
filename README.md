@@ -36,7 +36,7 @@ $updateUserLastLoginDate = function (UserHasLoggedIn $event) {
     $user->updateLastLoginDate(new \Datetime);
 };
 
-// Initialisation
+// Initialization
 $listenerProvider = new DefaultListenerProvider([
     $listenerCalledForEveryEvent,
     $updateUserLastLoginDate,
