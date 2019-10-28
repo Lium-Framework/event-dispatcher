@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Helium\EventDispatcher\Test;
 
 use Helium\EventDispatcher\EventDispatcher;
@@ -64,8 +66,10 @@ class EventDispatcherTest extends TestCase
     public function MUST_return_the_same_Event_object_it_was_passed_after_it_is_done_invoking_Listeners()
     {
         $this->listenerProvider->method('getListenersForEvent')->willReturn([
-            function (object $event) {},
-            function (object $event) {},
+            function (object $event) {
+            },
+            function (object $event) {
+            },
         ]);
 
         $event = new \stdClass;
@@ -113,7 +117,6 @@ class EventDispatcherTest extends TestCase
         $this->listenerProvider->method('getListenersForEvent')->willReturn([
             function ($event) use (&$trace) {
                 $trace[] = 'listener 1 called';
-
             },
             function ($event) use (&$trace) {
                 $trace[] = 'listener 2 called';

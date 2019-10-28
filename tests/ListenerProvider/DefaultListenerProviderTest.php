@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Helium\EventDispatcher\Test\ListenerProvider;
 
 use Helium\EventDispatcher\ListenerProvider\DefaultListenerProvider;
