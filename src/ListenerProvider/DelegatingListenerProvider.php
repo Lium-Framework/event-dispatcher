@@ -15,7 +15,7 @@ final class DelegatingListenerProvider implements ListenerProviderInterface
     private $subListenerProviders;
 
     /** @var array<string, array<callable>> */
-    private $listenersForEventsStorage;
+    private $runtimeStorage;
 
     /**
      * @param iterable<ListenerProviderInterface> $subListenerProviders
@@ -23,7 +23,7 @@ final class DelegatingListenerProvider implements ListenerProviderInterface
     public function __construct(iterable $subListenerProviders)
     {
         $this->subListenerProviders = $this->iterableToArray($subListenerProviders);
-        $this->listenersForEventsStorage = [];
+        $this->runtimeStorage = [];
     }
 
     /**
@@ -33,22 +33,20 @@ final class DelegatingListenerProvider implements ListenerProviderInterface
     {
         $eventName = get_class($event);
 
-        if (!isset($this->listenersForEventsStorage[$eventName])) {
-            $this->listenersForEventsStorage[$eventName] = [];
+        if (!isset($this->runtimeStorage[$eventName])) {
+            $this->runtimeStorage[$eventName] = [];
 
-            $temporaryListenersForEvent = [];
+            $listenersForCurrentEvent = [];
             foreach ($this->subListenerProviders as $subListenerProvider) {
-                $temporaryListenersForEvent[] = $this->iterableToArray(
-                    $subListenerProvider->getListenersForEvent($event)
-                );
+                $listenersForCurrentEvent[] = $this->iterableToArray($subListenerProvider->getListenersForEvent($event));
             }
 
-            if ([] !== $temporaryListenersForEvent) {
-                $this->listenersForEventsStorage[$eventName] = array_merge(...$temporaryListenersForEvent);
+            if ([] !== $listenersForCurrentEvent) {
+                $this->runtimeStorage[$eventName] = array_merge(...$listenersForCurrentEvent);
             }
         }
 
-        return $this->listenersForEventsStorage[$eventName];
+        return $this->runtimeStorage[$eventName];
     }
 
     private function iterableToArray(iterable $iterable): array
