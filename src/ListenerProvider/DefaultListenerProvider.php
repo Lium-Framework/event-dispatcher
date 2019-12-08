@@ -88,9 +88,8 @@ final class DefaultListenerProvider implements ListenerProviderInterface
             }
 
             $typeName = $type->getName();
-            if ('object' !== $typeName && !$reflectionParameter->getClass()) {
-                throw new InvalidListenerException($listener, 'The listener argument must have a type of the event it listen or the scalar type "object".');
-                continue;
+            if ('object' !== $typeName && null === $reflectionParameter->getClass()) {
+                throw new InvalidListenerException($listener, 'The listener argument must have the type of the event it listen or the scalar type "object".');
             }
 
             $this->listenerArgumentMap[$key] = $typeName;

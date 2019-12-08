@@ -23,17 +23,19 @@ Here is a quick example to show you how to use it :
 ```php
 <?php
 
+use App\Event\UserLoggedIn;
 use Lium\EventDispatcher\EventDispatcher;
 use Lium\EventDispatcher\ListenerProvider\DefaultListenerProvider;
 
 // Listeners definitions
 $listenerCalledForEveryEvent = function (object $event) {
-    // Do something with the event data...
+    // This listener will match all events because its argument has the scalar type "object"
+    echo sprintf('A listener has been called with the event "%s".', get_class($event));
 };
 
 $updateUserLastLoginDate = function (UserHasLoggedIn $event) {
     $user = $event->getUser();
-    $user->updateLastLoginDate(new \Datetime);
+    echo sprintf('The user "%s" has logged in.', $user->getUsername());
 };
 
 // Initialization
@@ -46,6 +48,12 @@ $eventDispatcher = new EventDispatcher($listenerProvider);
 
 // Later in your code...
 $eventDispatcher->dispatch(new UserHasLoggedIn($user));
+```
+
+The previous example will output :
+```
+A listener has been called with the event "App\Event\UserLoggedIn".
+The user "johndoe" has logged in.
 ```
 
 You can check the [examples directory](./examples) to see more examples.
