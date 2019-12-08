@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Lium\EventDispatcher\ListenerProvider;
 
+use Lium\EventDispatcher\Exception\InvalidListenerException;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
 /**
@@ -78,19 +79,17 @@ final class DefaultListenerProvider implements ListenerProviderInterface
             $closure = \Closure::fromCallable($listener);
             $reflectionFunction = new \ReflectionFunction($closure);
 
-            if (!$reflectionParameter = $reflectionFunction->getParameters()[0] ?? null) {
-                unset($this->listeners[$key]);
-                continue;
+            if (null === $reflectionParameter = $reflectionFunction->getParameters()[0] ?? null) {
+                throw new InvalidListenerException($listener, 'The listener must have one argument corresponding to the event it listen.');
             }
 
             if (null === $type = $reflectionParameter->getType()) {
-                unset($this->listeners[$key]);
-                continue;
+                throw new InvalidListenerException($listener, 'The listener argument must have a type corresponding to the event it listen.');
             }
 
             $typeName = $type->getName();
             if ('object' !== $typeName && !$reflectionParameter->getClass()) {
-                unset($this->listeners[$key]);
+                throw new InvalidListenerException($listener, 'The listener argument must have a type of the event it listen or the scalar type "object".');
                 continue;
             }
 
