@@ -1,4 +1,4 @@
-# Helium event dispatcher component
+# Lium event dispatcher component
 
 A strict [PSR-14](https://www.php-fig.org/psr/psr-14/) implementation built with simplicity in mind.
 
@@ -23,8 +23,8 @@ Here is a quick example to show you how to use it :
 ```php
 <?php
 
-use Helium\EventDispatcher\EventDispatcher;
-use Helium\EventDispatcher\ListenerProvider\DefaultListenerProvider;
+use Lium\EventDispatcher\EventDispatcher;
+use Lium\EventDispatcher\ListenerProvider\DefaultListenerProvider;
 
 // Listeners definitions
 $listenerCalledForEveryEvent = function (object $event) {

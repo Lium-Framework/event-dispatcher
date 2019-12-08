@@ -1,6 +1,6 @@
 <?php
 
-use Helium\EventDispatcher\StoppableEventTrait;
+use Lium\EventDispatcher\StoppableEventTrait;
 use Psr\EventDispatcher\StoppableEventInterface;
 
 require '../vendor/autoload.php';
@@ -54,9 +54,9 @@ $arrayListeners = [
     new InvokableListener(),
 ];
 
-$provider = new \Helium\EventDispatcher\ListenerProvider\DefaultListenerProvider(getIterator());
+$provider = new \Lium\EventDispatcher\ListenerProvider\DefaultListenerProvider(getIterator());
 
-$eventDispatcher = new \Helium\EventDispatcher\EventDispatcher($provider);
+$eventDispatcher = new \Lium\EventDispatcher\EventDispatcher($provider);
 
 $eventDispatcher->dispatch(new ThirdEvent());
 $eventDispatcher->dispatch(new FirstEvent());

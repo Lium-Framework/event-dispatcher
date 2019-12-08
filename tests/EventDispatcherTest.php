@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Helium\EventDispatcher\Test;
+namespace Lium\EventDispatcher\Test;
 
-use Helium\EventDispatcher\EventDispatcher;
+use Lium\EventDispatcher\EventDispatcher;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\ListenerProviderInterface;

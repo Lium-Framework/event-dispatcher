@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Helium\EventDispatcher\Test;
+namespace Lium\EventDispatcher\Test;
 
-use Helium\EventDispatcher\StoppableEventTrait;
+use Lium\EventDispatcher\StoppableEventTrait;
 use PHPUnit\Framework\TestCase;
 
 class StoppableEventTraitTest extends TestCase

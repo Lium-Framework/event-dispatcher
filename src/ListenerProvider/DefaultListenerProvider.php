@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Helium\EventDispatcher\ListenerProvider;
+namespace Lium\EventDispatcher\ListenerProvider;
 
 use Psr\EventDispatcher\ListenerProviderInterface;
 
@@ -15,7 +15,7 @@ final class DefaultListenerProvider implements ListenerProviderInterface
     /** @var callable[] */
     private $listeners;
 
-    /** @var array<int, string>|null */
+    /** @var string[]|null */
     private $listenerArgumentMap;
 
     /** @var array<string, array<callable>> */
@@ -23,10 +23,16 @@ final class DefaultListenerProvider implements ListenerProviderInterface
 
     /**
      * @param iterable<callable> $listeners
+     *
+     * @psalm-suppress MixedPropertyTypeCoercion
      */
     public function __construct(iterable $listeners)
     {
-        $this->listeners = $this->iterableToArray($listeners);
+        if ($listeners instanceof \Traversable) {
+            $listeners = iterator_to_array($listeners);
+        }
+
+        $this->listeners =  $listeners;
         $this->runtimeStorage = [];
     }
 
@@ -77,7 +83,7 @@ final class DefaultListenerProvider implements ListenerProviderInterface
                 continue;
             }
 
-            if (!$type = $reflectionParameter->getType()) {
+            if (null === $type = $reflectionParameter->getType()) {
                 unset($this->listeners[$key]);
                 continue;
             }
@@ -90,14 +96,5 @@ final class DefaultListenerProvider implements ListenerProviderInterface
 
             $this->listenerArgumentMap[$key] = $typeName;
         }
-    }
-
-    private function iterableToArray(iterable $iterable): array
-    {
-        if ($iterable instanceof \Traversable) {
-            $iterable = iterator_to_array($iterable);
-        }
-
-        return $iterable;
     }
 }

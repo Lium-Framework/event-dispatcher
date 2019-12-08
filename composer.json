@@ -1,5 +1,5 @@
 {
-    "name": "helium/event-dispatcher",
+    "name": "lium/event-dispatcher",
     "description": "Standard implementation of PSR-14 for event handling.",
     "type": "library",
     "keywords": ["psr-14", "events"],
@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "php": ">=7.2.0",
+        "php": "^7.2.5",
         "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {
@@ -21,12 +21,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Helium\\EventDispatcher\\": "src/"
+            "Lium\\EventDispatcher\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Helium\\EventDispatcher\\Test\\": "tests/"
+            "Lium\\EventDispatcher\\Test\\": "tests/"
         }
     },
     "config": {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Helium\EventDispatcher;
+namespace Lium\EventDispatcher;
 
 /**
  * A trait to implement the StoppableEventInterface.

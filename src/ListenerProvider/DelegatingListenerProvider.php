@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Helium\EventDispatcher\ListenerProvider;
+namespace Lium\EventDispatcher\ListenerProvider;
 
 use Psr\EventDispatcher\ListenerProviderInterface;
 
@@ -19,6 +19,8 @@ final class DelegatingListenerProvider implements ListenerProviderInterface
 
     /**
      * @param iterable<ListenerProviderInterface> $subListenerProviders
+     *
+     * @psalm-suppress MixedPropertyTypeCoercion
      */
     public function __construct(iterable $subListenerProviders)
     {
@@ -28,6 +30,8 @@ final class DelegatingListenerProvider implements ListenerProviderInterface
 
     /**
      * {@inheritDoc}
+     *
+     * @psalm-suppress MixedPropertyTypeCoercion
      */
     public function getListenersForEvent(object $event): iterable
     {

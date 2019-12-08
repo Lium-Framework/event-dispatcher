@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Helium\EventDispatcher;
+namespace Lium\EventDispatcher;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
@@ -26,6 +26,8 @@ final class EventDispatcher implements EventDispatcherInterface
 
     /**
      * {@inheritDoc}
+     *
+     * @psalm-suppress MixedMethodCall
      */
     public function dispatch(object $event): object
     {

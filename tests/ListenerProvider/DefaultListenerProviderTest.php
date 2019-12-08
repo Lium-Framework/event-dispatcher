@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Helium\EventDispatcher\Test\ListenerProvider;
+namespace Lium\EventDispatcher\Test\ListenerProvider;
 
-use Helium\EventDispatcher\ListenerProvider\DefaultListenerProvider;
+use Lium\EventDispatcher\ListenerProvider\DefaultListenerProvider;
 use PHPUnit\Framework\TestCase;
 
 class DefaultListenerProviderTest extends TestCase
