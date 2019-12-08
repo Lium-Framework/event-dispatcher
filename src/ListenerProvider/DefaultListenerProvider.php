@@ -19,9 +19,6 @@ final class DefaultListenerProvider implements ListenerProviderInterface
     /** @var string[]|null */
     private $listenerArgumentMap;
 
-    /** @var array<string, array<callable>> */
-    private $runtimeStorage;
-
     /**
      * @param iterable<callable> $listeners
      *
@@ -34,7 +31,6 @@ final class DefaultListenerProvider implements ListenerProviderInterface
         }
 
         $this->listeners =  $listeners;
-        $this->runtimeStorage = [];
     }
 
     /**
@@ -46,21 +42,16 @@ final class DefaultListenerProvider implements ListenerProviderInterface
             $this->prepareListenerParameterMap();
         }
 
-        $eventName = get_class($event);
+        $listenersForEvent = [];
+        foreach ($this->listeners as $key => $listener) {
+            $listenerArgumentType = $this->listenerArgumentMap[$key];
 
-        if (!isset($this->runtimeStorage[$eventName])) {
-            $this->runtimeStorage[$eventName] = [];
-
-            foreach ($this->listeners as $key => $listener) {
-                $listenerArgumentType = $this->listenerArgumentMap[$key];
-
-                if ($event instanceof $listenerArgumentType || 'object' === $listenerArgumentType) {
-                    $this->runtimeStorage[$eventName][] = $listener;
-                }
+            if ($event instanceof $listenerArgumentType || 'object' === $listenerArgumentType) {
+                $listenersForEvent[] = $listener;
             }
         }
 
-        return $this->runtimeStorage[$eventName];
+        return $listenersForEvent;
     }
 
     /**
@@ -72,7 +63,6 @@ final class DefaultListenerProvider implements ListenerProviderInterface
      */
     private function prepareListenerParameterMap(): void
     {
-        $this->runtimeStorage = [];
         $this->listenerArgumentMap = [];
 
         foreach ($this->listeners as $key => $listener) {

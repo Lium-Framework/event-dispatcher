@@ -7,15 +7,12 @@ namespace Lium\EventDispatcher\ListenerProvider;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
 /**
- * This ListenerProvider delegates its responsibilities to other listeners providers and store the results.
+ * This ListenerProvider delegates its responsibilities to other listeners providers.
  */
 final class DelegatingListenerProvider implements ListenerProviderInterface
 {
     /** @var ListenerProviderInterface[] */
     private $subListenerProviders;
-
-    /** @var array<string, array<callable>> */
-    private $runtimeStorage;
 
     /**
      * @param iterable<ListenerProviderInterface> $subListenerProviders
@@ -25,7 +22,6 @@ final class DelegatingListenerProvider implements ListenerProviderInterface
     public function __construct(iterable $subListenerProviders)
     {
         $this->subListenerProviders = $this->iterableToArray($subListenerProviders);
-        $this->runtimeStorage = [];
     }
 
     /**
@@ -35,23 +31,18 @@ final class DelegatingListenerProvider implements ListenerProviderInterface
      */
     public function getListenersForEvent(object $event): iterable
     {
-        $eventName = get_class($event);
+        $listenersForEvent = [];
 
-        if (!isset($this->runtimeStorage[$eventName])) {
-            $this->runtimeStorage[$eventName] = [];
-
-            $listenersForCurrentEvent = [];
-            foreach ($this->subListenerProviders as $subListenerProvider) {
-                $listenersForCurrentEvent[] = $this->iterableToArray($subListenerProvider->getListenersForEvent($event));
-            }
-
-            // This check will not be necessary anymore in PHP 7.4
-            if ([] !== $listenersForCurrentEvent) {
-                $this->runtimeStorage[$eventName] = array_merge(...$listenersForCurrentEvent);
-            }
+        foreach ($this->subListenerProviders as $subListenerProvider) {
+            $listenersForEvent[] = $this->iterableToArray($subListenerProvider->getListenersForEvent($event));
         }
 
-        return $this->runtimeStorage[$eventName];
+        // This check will not be necessary anymore in PHP 7.4
+        if ([] !== $listenersForEvent) {
+            $listenersForEvent = array_merge(...$listenersForEvent);
+        }
+
+        return $listenersForEvent;
     }
 
     private function iterableToArray(iterable $iterable): array
