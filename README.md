@@ -14,7 +14,9 @@ The main goal behind this library is to be a strict implementation of the PSR-14
 
 ## Installation
 
-This library is not available on composer yet...
+```
+composer require lium/event-dispatcher
+```
 
 ## Usage
 
