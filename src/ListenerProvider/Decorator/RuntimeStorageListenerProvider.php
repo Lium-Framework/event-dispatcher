@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Lium\EventDispatcher\ListenerProvider\Decorator;
 
+use Lium\EventDispatcher\ListenerProvider\ResettableListenerProviderInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
 /**
  * This listener provider decorates an other one to store its results.
  */
-final class RuntimeStorageListenerProvider implements ListenerProviderInterface
+final class RuntimeStorageListenerProvider implements ResettableListenerProviderInterface
 {
     /** @var ListenerProviderInterface */
     private $decoratedListenerProvider;

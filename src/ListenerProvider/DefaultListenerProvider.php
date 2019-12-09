@@ -11,7 +11,7 @@ use Psr\EventDispatcher\ListenerProviderInterface;
  * A default listener parameter implementation.
  * It will check the listener first argument type to determine if the listener match the event.
  */
-final class DefaultListenerProvider implements ListenerProviderInterface
+final class DefaultListenerProvider implements ResettableListenerProviderInterface
 {
     /** @var callable[] */
     private $listeners;
@@ -84,5 +84,10 @@ final class DefaultListenerProvider implements ListenerProviderInterface
 
             $this->listenerArgumentMap[$key] = $typeName;
         }
+    }
+
+    public function reset(): void
+    {
+        $this->listenerArgumentMap = null;
     }
 }
