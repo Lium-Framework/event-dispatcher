@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Lium\EventDispatcher\Test\ListenerProvider;
 
+use Lium\EventDispatcher\Exception\InvalidListenerException;
 use Lium\EventDispatcher\ListenerProvider\DefaultListenerProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -80,7 +81,8 @@ class DefaultListenerProviderTest extends TestCase
 
         $listenerProvider = new DefaultListenerProvider($listeners);
 
-        $this->assertSame([], $listenerProvider->getListenersForEvent(new \stdClass));
+        $this->expectExceptionObject(new InvalidListenerException($listeners[0], 'The listener must have one argument corresponding to the event it listen.'));
+        $listenerProvider->getListenersForEvent(new \stdClass);
     }
 }
 
