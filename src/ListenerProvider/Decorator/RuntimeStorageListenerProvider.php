@@ -7,19 +7,19 @@ namespace Lium\EventDispatcher\ListenerProvider\Decorator;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
 /**
- * This listener provider decorate an other to store its results.
+ * This listener provider decorates an other one to store its results.
  */
 final class RuntimeStorageListenerProvider implements ListenerProviderInterface
 {
     /** @var ListenerProviderInterface */
-    private $parentListenerProvider;
+    private $decoratedListenerProvider;
 
     /** @var array<string, callable[]> */
     private $store;
 
-    public function __construct(ListenerProviderInterface $parentListenerProvider)
+    public function __construct(ListenerProviderInterface $decoratedListenerProvider)
     {
-        $this->parentListenerProvider = $parentListenerProvider;
+        $this->decoratedListenerProvider = $decoratedListenerProvider;
         $this->store = [];
     }
 
@@ -32,7 +32,7 @@ final class RuntimeStorageListenerProvider implements ListenerProviderInterface
     {
         $eventName = get_class($event);
         if (!isset($this->store[$eventName])) {
-            $listenersForEvent = $this->parentListenerProvider->getListenersForEvent($event);
+            $listenersForEvent = $this->decoratedListenerProvider->getListenersForEvent($event);
 
             $this->store[$eventName] = $listenersForEvent instanceof \Traversable
                 ? iterator_to_array($listenersForEvent)
