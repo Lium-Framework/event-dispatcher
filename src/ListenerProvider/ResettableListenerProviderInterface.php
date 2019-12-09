@@ -2,7 +2,9 @@
 
 namespace Lium\EventDispatcher\ListenerProvider;
 
-interface ResettableListenerProviderInterface
+use Psr\EventDispatcher\ListenerProviderInterface;
+
+interface ResettableListenerProviderInterface extends ListenerProviderInterface
 {
     public function reset(): void;
 }
