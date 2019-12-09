@@ -7,6 +7,8 @@ namespace Lium\EventDispatcher;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
  * The strict PSR-14 event dispatcher implementation.
@@ -16,9 +18,13 @@ final class EventDispatcher implements EventDispatcherInterface
     /** @var ListenerProviderInterface */
     private $listenerProvider;
 
-    public function __construct(ListenerProviderInterface $listenerProvider)
+    /** @var LoggerInterface */
+    private $logger;
+
+    public function __construct(ListenerProviderInterface $listenerProvider, LoggerInterface $logger = null)
     {
         $this->listenerProvider = $listenerProvider;
+        $this->logger = $logger ?? new NullLogger();
     }
 
     /**
