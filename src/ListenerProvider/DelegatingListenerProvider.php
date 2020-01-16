@@ -46,9 +46,9 @@ final class DelegatingListenerProvider implements ListenerProviderInterface
     }
 
     /**
-     * @param iterable<callable> $iterable
+     * @param iterable<mixed> $iterable
      *
-     * @return array<callable>
+     * @return array<mixed>
      */
     private function iterableToArray(iterable $iterable): array
     {
