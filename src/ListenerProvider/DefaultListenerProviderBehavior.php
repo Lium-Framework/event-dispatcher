@@ -39,16 +39,6 @@ trait DefaultListenerProviderBehavior
         return $listenersForEvent;
     }
 
-    /**
-     * Prepare a map between a listener key and the listener first parameter class name thanks to \ReflectionFunction.
-     * If the listener has no parameter or if this parameter is not type-hinted with a class name or with "object", the
-     * listener is removed from the stack.
-     *
-     * @param callable $listener
-     *
-     * @return string
-     * @throws \ReflectionException
-     */
     private function getListenerUniqueParameterType(callable $listener): string
     {
         $closure = \Closure::fromCallable($listener);
