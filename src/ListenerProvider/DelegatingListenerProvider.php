@@ -11,7 +11,7 @@ use Psr\EventDispatcher\ListenerProviderInterface;
  */
 final class DelegatingListenerProvider implements ListenerProviderInterface
 {
-    /** @var ListenerProviderInterface[] */
+    /** @var array<ListenerProviderInterface> */
     private $subListenerProviders;
 
     /**
@@ -25,7 +25,7 @@ final class DelegatingListenerProvider implements ListenerProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @psalm-suppress MixedPropertyTypeCoercion
      */
@@ -38,13 +38,18 @@ final class DelegatingListenerProvider implements ListenerProviderInterface
         }
 
         // This check will not be necessary anymore in PHP 7.4
-        if ([] !== $listenersForEvent) {
+        if (count($listenersForEvent) > 0) {
             $listenersForEvent = array_merge(...$listenersForEvent);
         }
 
         return $listenersForEvent;
     }
 
+    /**
+     * @param iterable<callable> $iterable
+     *
+     * @return array<callable>
+     */
     private function iterableToArray(iterable $iterable): array
     {
         if ($iterable instanceof \Traversable) {

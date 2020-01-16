@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Lium\EventDispatcher\ListenerProvider\Decorator;
 
-use Lium\EventDispatcher\ListenerProvider\ResettableListenerProviderInterface;
+use Lium\EventDispatcher\ListenerProvider\ResettableListenerProvider;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
 /**
  * This listener provider decorates an other one to store its results.
  */
-final class RuntimeStorageListenerProvider implements ResettableListenerProviderInterface
+final class RuntimeStorageListenerProvider implements ResettableListenerProvider
 {
     /** @var ListenerProviderInterface */
     private $decoratedListenerProvider;
 
-    /** @var array<string, callable[]> */
+    /** @var array<string, array<callable>> */
     private $store;
 
     public function __construct(ListenerProviderInterface $decoratedListenerProvider)
@@ -25,7 +25,7 @@ final class RuntimeStorageListenerProvider implements ResettableListenerProvider
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @psalm-suppress MixedPropertyTypeCoercion
      */

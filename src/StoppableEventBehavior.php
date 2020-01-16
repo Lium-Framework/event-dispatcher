@@ -8,7 +8,7 @@ namespace Lium\EventDispatcher;
  * A trait to implement the StoppableEventInterface.
  * An alternative could be to implement the method isPropagationStopped() with dynamic data from the event.
  */
-trait StoppableEventTrait
+trait StoppableEventBehavior
 {
     /** @var bool */
     private $propagationStopped = false;

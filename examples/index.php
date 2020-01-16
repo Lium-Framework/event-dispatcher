@@ -1,6 +1,6 @@
 <?php
 
-use Lium\EventDispatcher\StoppableEventTrait;
+use Lium\EventDispatcher\StoppableEventBehavior;
 use Psr\EventDispatcher\StoppableEventInterface;
 
 require '../vendor/autoload.php';
@@ -15,7 +15,7 @@ class SecondEvent extends FirstEvent
 
 class ThirdEvent implements StoppableEventInterface
 {
-    use StoppableEventTrait;
+    use StoppableEventBehavior;
 }
 
 class InvokableListener

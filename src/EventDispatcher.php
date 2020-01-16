@@ -22,24 +22,21 @@ final class EventDispatcher implements EventDispatcherInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @psalm-suppress MixedMethodCall
      */
     public function dispatch(object $event): object
     {
         $eventIsStoppable = $event instanceof StoppableEventInterface;
-        if ($eventIsStoppable && $event->isPropagationStopped()) {
-            return $event;
-        }
 
         /** @var callable $listener */
         foreach ($this->listenerProvider->getListenersForEvent($event) as $listener) {
-            $listener($event);
-
             if ($eventIsStoppable && $event->isPropagationStopped()) {
                 break;
             }
+
+            $listener($event);
         }
 
         return $event;

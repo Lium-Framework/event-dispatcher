@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Lium\EventDispatcher\ListenerProvider;
 
-use Lium\EventDispatcher\Exception\InvalidListenerException;
+use Lium\EventDispatcher\Exception\InvalidListener;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
 /**
  * A default listener parameter implementation.
  * It will check the listener first argument type to determine if the listener match the event.
  */
-final class DefaultListenerProvider implements ResettableListenerProviderInterface
+final class DefaultListenerProvider implements ListenerProviderInterface
 {
-    /** @var callable[] */
+    /** @var array<callable> */
     private $listeners;
 
-    /** @var string[]|null */
+    /** @var array<string>|null */
     private $listenerArgumentMap;
 
     /**
@@ -30,15 +30,15 @@ final class DefaultListenerProvider implements ResettableListenerProviderInterfa
             $listeners = iterator_to_array($listeners);
         }
 
-        $this->listeners =  $listeners;
+        $this->listeners = $listeners;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getListenersForEvent(object $event): iterable
     {
-        if (null === $this->listenerArgumentMap) {
+        if ($this->listenerArgumentMap === null) {
             $this->prepareListenerParameterMap();
         }
 
@@ -46,7 +46,7 @@ final class DefaultListenerProvider implements ResettableListenerProviderInterfa
         foreach ($this->listeners as $key => $listener) {
             $listenerArgumentType = $this->listenerArgumentMap[$key];
 
-            if ($event instanceof $listenerArgumentType || 'object' === $listenerArgumentType) {
+            if ($event instanceof $listenerArgumentType || $listenerArgumentType === 'object') {
                 $listenersForEvent[] = $listener;
             }
         }
@@ -69,25 +69,22 @@ final class DefaultListenerProvider implements ResettableListenerProviderInterfa
             $closure = \Closure::fromCallable($listener);
             $reflectionFunction = new \ReflectionFunction($closure);
 
-            if (null === $reflectionParameter = $reflectionFunction->getParameters()[0] ?? null) {
-                throw new InvalidListenerException($listener, 'The listener must have one argument corresponding to the event it listen.');
+            $reflectionParameter = $reflectionFunction->getParameters()[0] ?? null;
+            if ($reflectionParameter === null) {
+                throw new InvalidListener($listener, 'The listener must have one argument corresponding to the event it listen.');
             }
 
-            if (null === $type = $reflectionParameter->getType()) {
-                throw new InvalidListenerException($listener, 'The listener argument must have a type corresponding to the event it listen.');
+            $type = $reflectionParameter->getType();
+            if ($type === null) {
+                throw new InvalidListener($listener, 'The listener argument must have a type corresponding to the event it listen.');
             }
 
             $typeName = $type->getName();
-            if ('object' !== $typeName && null === $reflectionParameter->getClass()) {
-                throw new InvalidListenerException($listener, 'The listener argument must have the type of the event it listen or the scalar type "object".');
+            if ($typeName !== 'object' && $reflectionParameter->getClass() !== null) {
+                throw new InvalidListener($listener, 'The listener argument must have the type of the event it listen or the scalar type "object".');
             }
 
             $this->listenerArgumentMap[$key] = $typeName;
         }
-    }
-
-    public function reset(): void
-    {
-        $this->listenerArgumentMap = null;
     }
 }
