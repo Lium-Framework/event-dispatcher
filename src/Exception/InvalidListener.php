@@ -9,11 +9,11 @@ final class InvalidListener extends \InvalidArgumentException
     /** @var callable */
     protected $listener;
 
-    public function __construct(callable $listener, string $reasonPhrase = '')
+    public function __construct(callable $listener, ?string $reasonPhrase = null)
     {
         $message = sprintf(
             'Listener invalid. %s',
-            $reasonPhrase
+            $reasonPhrase ?? 'The listener must have only one parameter which the type is the event class it listen to or the scalar type "object".'
         );
 
         parent::__construct($message);

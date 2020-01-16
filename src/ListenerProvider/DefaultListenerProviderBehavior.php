@@ -20,6 +20,7 @@ trait DefaultListenerProviderBehavior
     public function getListenersForEvent(object $event): iterable
     {
         if ($this->listenerArgumentMap === null) {
+            // Prepare the map
             $this->listenerArgumentMap = [];
             foreach ($this->listeners as $key => $listener) {
                 $this->listenerArgumentMap[$key] = $this->getListenerUniqueParameterType($listener);
@@ -55,17 +56,17 @@ trait DefaultListenerProviderBehavior
 
         $reflectionParameter = $reflectionFunction->getParameters()[0] ?? null;
         if ($reflectionParameter === null) {
-            throw new InvalidListener($listener, 'The listener must have one argument corresponding to the event it listen.');
+            throw new InvalidListener($listener);
         }
 
         $type = $reflectionParameter->getType();
         if ($type === null) {
-            throw new InvalidListener($listener, 'The listener argument must have a type corresponding to the event it listen.');
+            throw new InvalidListener($listener);
         }
 
         $typeName = $type->getName();
         if ($typeName !== 'object' && $reflectionParameter->getClass() !== null) {
-            throw new InvalidListener($listener, 'The listener argument must have the type of the event it listen or the scalar type "object".');
+            throw new InvalidListener($listener);
         }
 
         return $typeName;
