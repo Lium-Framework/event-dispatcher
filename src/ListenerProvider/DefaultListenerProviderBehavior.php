@@ -55,7 +55,7 @@ trait DefaultListenerProviderBehavior
         }
 
         $typeName = $type->getName();
-        if ($typeName !== 'object' && $reflectionParameter->getClass() !== null) {
+        if ($typeName !== 'object' && $reflectionParameter->getClass() === null) {
             throw new InvalidListener($listener);
         }
 

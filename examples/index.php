@@ -46,8 +46,6 @@ $arrayListeners = [
     function (FirstEvent $event) {
         dump('-- Call with FirstEvent --');
     },
-    function () {
-    },
     function (SecondEvent $event) {
         dump('-- Call with SecondEvent --');
     },
