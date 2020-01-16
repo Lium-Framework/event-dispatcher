@@ -16,8 +16,6 @@ final class DefaultListenerProvider implements ListenerProviderInterface
 
     /**
      * @param iterable<callable> $listeners
-     *
-     * @psalm-suppress MixedPropertyTypeCoercion
      */
     public function __construct(iterable $listeners)
     {
