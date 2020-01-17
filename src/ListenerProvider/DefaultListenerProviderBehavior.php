@@ -21,10 +21,10 @@ trait DefaultListenerProviderBehavior
     {
         if ($this->listenerArgumentMap === null) {
             // Prepare the map
-            $this->listenerArgumentMap = [];
-            foreach ($this->listeners as $key => $listener) {
-                $this->listenerArgumentMap[$key] = $this->getListenerUniqueParameterType($listener);
-            }
+            $this->listenerArgumentMap = array_map(
+                [$this, 'getListenerUniqueParameterType'],
+                $this->listeners
+            );
         }
 
         $listenersForEvent = [];
