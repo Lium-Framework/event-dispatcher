@@ -27,16 +27,9 @@ trait DefaultListenerProviderBehavior
             );
         }
 
-        $listenersForEvent = [];
-        foreach ($this->listeners as $key => $listener) {
-            $listenerArgumentType = $this->listenerArgumentMap[$key];
-
-            if ($event instanceof $listenerArgumentType || $listenerArgumentType === 'object') {
-                $listenersForEvent[] = $listener;
-            }
-        }
-
-        return $listenersForEvent;
+        return array_filter($this->listeners, function (int $key) use ($event) {
+            return $event instanceof $this->listenerArgumentMap[$key] || $this->listenerArgumentMap[$key] === 'object';
+        }, ARRAY_FILTER_USE_KEY);
     }
 
     private function getListenerUniqueParameterType(callable $listener): string
