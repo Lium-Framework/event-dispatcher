@@ -12,23 +12,23 @@ trait DefaultListenerProviderBehavior
     private $listeners;
 
     /** @var array<string>|null */
-    private $listenerArgumentMap;
+    private $listenerParameterMap;
 
     /**
      * {@inheritdoc}
      */
     public function getListenersForEvent(object $event): iterable
     {
-        if ($this->listenerArgumentMap === null) {
+        if ($this->listenerParameterMap === null) {
             // Prepare the map
-            $this->listenerArgumentMap = array_map(
+            $this->listenerParameterMap = array_map(
                 [$this, 'getListenerUniqueParameterType'],
                 $this->listeners
             );
         }
 
         return array_filter($this->listeners, function (int $key) use ($event) {
-            return $event instanceof $this->listenerArgumentMap[$key] || $this->listenerArgumentMap[$key] === 'object';
+            return $event instanceof $this->listenerParameterMap[$key] || $this->listenerParameterMap[$key] === 'object';
         }, ARRAY_FILTER_USE_KEY);
     }
 

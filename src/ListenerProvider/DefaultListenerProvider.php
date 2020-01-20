@@ -8,7 +8,7 @@ use Psr\EventDispatcher\ListenerProviderInterface;
 
 /**
  * A default listener parameter implementation.
- * It will check the listener first argument type to determine if the listener match the event.
+ * It will check the listener first parameter type to determine if the listener match the event.
  */
 final class DefaultListenerProvider implements ListenerProviderInterface
 {
