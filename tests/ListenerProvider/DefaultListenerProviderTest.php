@@ -81,7 +81,7 @@ class DefaultListenerProviderTest extends TestCase
 
         $listenerProvider = new DefaultListenerProvider($listeners);
 
-        $this->expectExceptionObject(new InvalidListener($listeners[0], 'The listener must have one argument corresponding to the event it listen.'));
+        $this->expectExceptionObject(new InvalidListener($listeners[0]));
         $listenerProvider->getListenersForEvent(new \stdClass);
     }
 }
