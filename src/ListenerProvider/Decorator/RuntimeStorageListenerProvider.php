@@ -32,7 +32,7 @@ final class RuntimeStorageListenerProvider implements ResettableListenerProvider
     public function getListenersForEvent(object $event): iterable
     {
         $eventName = get_class($event);
-        if (!isset($this->store[$eventName])) {
+        if (isset($this->store[$eventName]) === false) {
             $listenersForEvent = $this->decoratedListenerProvider->getListenersForEvent($event);
 
             $this->store[$eventName] = $listenersForEvent instanceof \Traversable
