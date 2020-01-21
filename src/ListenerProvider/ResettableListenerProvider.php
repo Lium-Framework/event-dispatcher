@@ -14,7 +14,7 @@ use Psr\EventDispatcher\ListenerProviderInterface;
  * the call to internal dependencies. All properties of the object should be put
  * back to the same state it had when it was first ready to use.
  */
-interface ResettableListenerProviderInterface extends ListenerProviderInterface
+interface ResettableListenerProvider extends ListenerProviderInterface
 {
     public function reset(): void;
 }
