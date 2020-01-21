@@ -9,7 +9,7 @@ final class InvalidListener extends \InvalidArgumentException
     /** @var callable */
     protected $listener;
 
-    public function __construct(callable $listener, ?string $reasonPhrase = null, int $code = 0, \Throwable $previous = null)
+    public function __construct(callable $listener, ?string $reasonPhrase = null, int $code = 0, ?\Throwable $previous = null)
     {
         $message = sprintf(
             'Listener invalid. %s',
