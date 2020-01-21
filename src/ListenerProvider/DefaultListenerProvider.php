@@ -13,16 +13,4 @@ use Psr\EventDispatcher\ListenerProviderInterface;
 final class DefaultListenerProvider implements ListenerProviderInterface
 {
     use DefaultListenerProviderBehavior;
-
-    /**
-     * @param iterable<callable> $listeners
-     */
-    public function __construct(iterable $listeners)
-    {
-        if ($listeners instanceof \Traversable) {
-            $listeners = iterator_to_array($listeners);
-        }
-
-        $this->listeners = $listeners;
-    }
 }

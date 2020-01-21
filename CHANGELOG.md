@@ -21,9 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- PHP Insight integration
 - Add `Lium\EventDispatcher\ListenerProvider\DefaultListenerProviderBehavior` trait
 - Add `Lium\EventDispatcher\ListenerProvider\ResettableListenerProvider` interface
-- PHP Insight integration
+- Add `Lium\EventDispatcher\Listener` value object in order to validate the listener
 
 ### Changed
 
