@@ -21,16 +21,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add Lium\EventDispatcher\ListenerProvider\DefaultListenerProviderBehavior trait
-- Add Lium\EventDispatcher\ListenerProvider\ResettableListenerProvider interface
+- Add `Lium\EventDispatcher\ListenerProvider\DefaultListenerProviderBehavior` trait
+- Add `Lium\EventDispatcher\ListenerProvider\ResettableListenerProvider` interface
 - PHP Insight integration
 
 ### Changed
 
-- Rename Lium\EventDispatcher\Exception\InvalidListenerException to Lium\EventDispatcher\Exception\InvalidListener
-- Rename Lium\EventDispatcher\StoppableEventTrait to Lium\EventDispatcher\StoppableEventBehavior
+- Rename `Lium\EventDispatcher\Exception\InvalidListenerException` to `Lium\EventDispatcher\Exception\InvalidListener`
+- Rename `Lium\EventDispatcher\StoppableEventTrait` to `Lium\EventDispatcher\StoppableEventBehavior`
 
 ### Removed
+
+- Remove `./examples` folder
 
 ## [0.0.1] - 2019-12-08
 
