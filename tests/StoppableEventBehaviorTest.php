@@ -7,7 +7,7 @@ namespace Lium\EventDispatcher\Test;
 use Lium\EventDispatcher\StoppableEventBehavior;
 use PHPUnit\Framework\TestCase;
 
-class StoppableEventTraitTest extends TestCase
+class StoppableEventBehaviorTest extends TestCase
 {
     public function test_propagation_is_not_stopped_at_initialization()
     {

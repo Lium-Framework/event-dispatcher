@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Rename `Lium\EventDispatcher\Exception\InvalidListenerException` to `Lium\EventDispatcher\Exception\InvalidListener`
 - Rename `Lium\EventDispatcher\StoppableEventTrait` to `Lium\EventDispatcher\StoppableEventBehavior`
+- Rename `Lium\EventDispatcher\Test\StoppableEventTraitTest` to `Lium\EventDispatcher\Test\StoppableEventBehaviorTest`
 
 ### Removed
 
