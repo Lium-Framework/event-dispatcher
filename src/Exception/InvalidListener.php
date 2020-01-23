@@ -13,7 +13,7 @@ final class InvalidListener extends \InvalidArgumentException
     {
         $message = sprintf(
             'Listener invalid. %s',
-            $reasonPhrase ?? 'The listener must have only one parameter which the type is the event class it listen to or the scalar type "object".'
+            $reasonPhrase ?? 'The listener must have only one parameter. This parameter type must be the event class it listen to, the scalar type "object" or not defined.'
         );
 
         parent::__construct($message, $code, $previous);

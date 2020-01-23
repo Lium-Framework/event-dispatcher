@@ -79,10 +79,8 @@ class DefaultListenerProviderTest extends TestCase
             }
         ];
 
-        $listenerProvider = new DefaultListenerProvider($listeners);
-
         $this->expectExceptionObject(new InvalidListener($listeners[0]));
-        $listenerProvider->getListenersForEvent(new \stdClass);
+        new DefaultListenerProvider($listeners);
     }
 }
 

@@ -4,54 +4,41 @@ declare(strict_types=1);
 
 namespace Lium\EventDispatcher\ListenerProvider;
 
-use Lium\EventDispatcher\Exception\InvalidListener;
+use Lium\EventDispatcher\Listener;
 
 trait DefaultListenerProviderBehavior
 {
-    /** @var array<callable> */
+    /** @var array<Listener> */
     private $listeners;
 
-    /** @var array<string>|null */
-    private $listenerParameterMap;
+    /**
+     * @param iterable<callable> $listeners
+     */
+    public function __construct(iterable $listeners)
+    {
+        $this->listeners = [];
+        foreach ($listeners as $listener) {
+            $this->listeners[] = new Listener($listener);
+        }
+    }
 
     /**
      * {@inheritdoc}
      */
     public function getListenersForEvent(object $event): iterable
     {
-        if ($this->listenerParameterMap === null) {
-            // Prepare the map
-            $this->listenerParameterMap = array_map(
-                [$this, 'getListenerUniqueParameterType'],
-                $this->listeners
-            );
-        }
+        $listenerForEvent = array_filter(
+            $this->listeners,
+            static function (Listener $listener) use ($event) {
+                return $listener->match($event);
+            }
+        );
 
-        return array_filter($this->listeners, function (int $key) use ($event) {
-            return $event instanceof $this->listenerParameterMap[$key] || $this->listenerParameterMap[$key] === 'object';
-        }, ARRAY_FILTER_USE_KEY);
-    }
-
-    private function getListenerUniqueParameterType(callable $listener): string
-    {
-        $closure = \Closure::fromCallable($listener);
-        $reflectionFunction = new \ReflectionFunction($closure);
-
-        $reflectionParameter = $reflectionFunction->getParameters()[0] ?? null;
-        if ($reflectionParameter === null) {
-            throw new InvalidListener($listener);
-        }
-
-        $type = $reflectionParameter->getType();
-        if ($type === null) {
-            throw new InvalidListener($listener);
-        }
-
-        $typeName = $type->getName();
-        if ($typeName !== 'object' && $reflectionParameter->getClass() === null) {
-            throw new InvalidListener($listener);
-        }
-
-        return $typeName;
+        return array_map(
+            static function (Listener $listener) {
+                return $listener->getCallable();
+            },
+            $listenerForEvent
+        );
     }
 }
