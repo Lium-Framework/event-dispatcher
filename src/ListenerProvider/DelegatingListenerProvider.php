@@ -21,7 +21,9 @@ final class DelegatingListenerProvider implements ListenerProviderInterface
      */
     public function __construct(iterable $subListenerProviders)
     {
-        $this->subListenerProviders = $this->iterableToArray($subListenerProviders);
+        $this->subListenerProviders = $subListenerProviders instanceof \Traversable
+            ? iterator_to_array($subListenerProviders)
+            : $subListenerProviders;
     }
 
     /**
@@ -31,31 +33,8 @@ final class DelegatingListenerProvider implements ListenerProviderInterface
      */
     public function getListenersForEvent(object $event): iterable
     {
-        $listenersForEvent = [];
-
         foreach ($this->subListenerProviders as $subListenerProvider) {
-            $listenersForEvent[] = $this->iterableToArray($subListenerProvider->getListenersForEvent($event));
+            yield from $subListenerProvider->getListenersForEvent($event);
         }
-
-        // This check will not be necessary anymore in PHP 7.4
-        if (count($listenersForEvent) > 0) {
-            $listenersForEvent = array_merge(...$listenersForEvent);
-        }
-
-        return $listenersForEvent;
-    }
-
-    /**
-     * @param iterable<mixed> $iterable
-     *
-     * @return array<mixed>
-     */
-    private function iterableToArray(iterable $iterable): array
-    {
-        if ($iterable instanceof \Traversable) {
-            $iterable = iterator_to_array($iterable);
-        }
-
-        return $iterable;
     }
 }
