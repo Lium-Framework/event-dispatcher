@@ -28,11 +28,6 @@ trait StoppableEventBehavior
         return $this->propagationStopped;
     }
 
-    /**
-     * Stop the propagation of the event.
-     *
-     * @return self
-     */
     public function stopPropagation(): self
     {
         $this->propagationStopped = true;
