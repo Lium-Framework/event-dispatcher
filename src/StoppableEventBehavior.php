@@ -10,8 +10,7 @@ namespace Lium\EventDispatcher;
  */
 trait StoppableEventBehavior
 {
-    /** @var bool */
-    private $propagationStopped = false;
+    private bool $propagationStopped = false;
 
     /**
      * Is propagation stopped?

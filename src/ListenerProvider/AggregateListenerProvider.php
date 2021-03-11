@@ -9,10 +9,10 @@ use Psr\EventDispatcher\ListenerProviderInterface;
 /**
  * This ListenerProvider delegates its responsibilities to other listeners providers.
  */
-final class DelegatingListenerProvider implements ListenerProviderInterface
+final class AggregateListenerProvider implements ListenerProviderInterface
 {
     /** @var iterable<ListenerProviderInterface> */
-    private $subListenerProviders;
+    private iterable $subListenerProviders;
 
     /**
      * @param iterable<ListenerProviderInterface> $subListenerProviders
@@ -22,6 +22,9 @@ final class DelegatingListenerProvider implements ListenerProviderInterface
         $this->subListenerProviders = $subListenerProviders;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getListenersForEvent(object $event): iterable
     {
         foreach ($this->subListenerProviders as $subListenerProvider) {

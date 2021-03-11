@@ -6,6 +6,7 @@ namespace Lium\EventDispatcher\ListenerProvider\Decorator;
 
 use Lium\EventDispatcher\ListenerProvider\ResettableListenerProvider;
 use Psr\EventDispatcher\ListenerProviderInterface;
+use Traversable;
 use function get_class;
 
 /**
@@ -13,11 +14,10 @@ use function get_class;
  */
 final class RuntimeStorageListenerProvider implements ResettableListenerProvider
 {
-    /** @var ListenerProviderInterface */
-    private $decoratedListenerProvider;
+    private ListenerProviderInterface $decoratedListenerProvider;
 
     /** @var array<string, array<callable>> */
-    private $store;
+    private array $store;
 
     public function __construct(ListenerProviderInterface $decoratedListenerProvider)
     {
@@ -36,7 +36,7 @@ final class RuntimeStorageListenerProvider implements ResettableListenerProvider
         if (isset($this->store[$eventName]) === false) {
             $listenersForEvent = $this->decoratedListenerProvider->getListenersForEvent($event);
 
-            $this->store[$eventName] = $listenersForEvent instanceof \Traversable
+            $this->store[$eventName] = $listenersForEvent instanceof Traversable
                 ? iterator_to_array($listenersForEvent)
                 : $listenersForEvent;
         }
