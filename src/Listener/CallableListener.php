@@ -27,16 +27,16 @@ final class CallableListener implements Listener
         $this->alwaysMatching = in_array($this->type, [null, 'object'], true);
     }
 
-    public function match(object $event): bool
-    {
-        return $this->alwaysMatching || $event instanceof $this->type;
-    }
-
     public function __invoke(object $event): void
     {
         $callable = $this->callable;
 
         $callable($event);
+    }
+
+    public function match(object $event): bool
+    {
+        return $this->alwaysMatching || $event instanceof $this->type;
     }
 
     public function getPriority(): int

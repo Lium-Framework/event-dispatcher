@@ -19,17 +19,17 @@ final class ContainerAwareListener implements Listener
         $this->priority = 0;
     }
 
-    public function match(object $event): bool
-    {
-        return true;
-    }
-
     public function __invoke(object $event): void
     {
         /** @var callable $service */
         $service = $this->container->get($this->toParse);
 
         $service($event);
+    }
+
+    public function match(object $event): bool
+    {
+        return true;
     }
 
     public function getPriority(): int
