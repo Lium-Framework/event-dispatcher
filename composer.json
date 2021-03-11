@@ -11,14 +11,14 @@
         }
     ],
     "require": {
-        "php": "^7.2.5",
+        "php": "^7.4",
         "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {
         "nunomaduro/phpinsights": "^1.11",
         "phpunit/phpunit": "^8.3",
         "symfony/var-dumper": "^5.0",
-        "vimeo/psalm": "^3.8"
+        "vimeo/psalm": "^4.6"
     },
     "autoload": {
         "psr-4": {
@@ -37,7 +37,7 @@
         "sort-packages": true
     },
     "scripts": {
-        "test:unit": "phpunit --bootstrap vendor/autoload.php tests/",
+        "test:unit": "phpunit",
         "test:static": "psalm",
         "test":[
             "@test:static",

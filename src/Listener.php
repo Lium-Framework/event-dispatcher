@@ -10,15 +10,14 @@ final class Listener
 {
     /** @var callable */
     private $callable;
-
-    /** @var string|null */
-    private $type;
-
-    /** @var bool */
-    private $alwaysMatching;
+    private ?string $type;
+    private bool $alwaysMatching;
 
     public function __construct(callable $callable)
     {
+        $this->callable = $callable;
+        $this->type = null;
+
         $reflectionParameter = $this->extractReflectionParameter($callable);
 
         $reflectionType = $reflectionParameter->getType();
@@ -29,7 +28,6 @@ final class Listener
             }
         }
 
-        $this->callable = $callable;
         $this->alwaysMatching = \in_array($this->type, [null, 'object'], true);
     }
 

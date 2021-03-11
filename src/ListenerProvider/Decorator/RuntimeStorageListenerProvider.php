@@ -6,9 +6,10 @@ namespace Lium\EventDispatcher\ListenerProvider\Decorator;
 
 use Lium\EventDispatcher\ListenerProvider\ResettableListenerProvider;
 use Psr\EventDispatcher\ListenerProviderInterface;
+use function get_class;
 
 /**
- * This listener provider decorates an other one to store its results.
+ * This listener provider decorates an other one to store its results in memory.
  */
 final class RuntimeStorageListenerProvider implements ResettableListenerProvider
 {

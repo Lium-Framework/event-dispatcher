@@ -11,26 +11,17 @@ use Psr\EventDispatcher\ListenerProviderInterface;
  */
 final class DelegatingListenerProvider implements ListenerProviderInterface
 {
-    /** @var array<ListenerProviderInterface> */
+    /** @var iterable<ListenerProviderInterface> */
     private $subListenerProviders;
 
     /**
      * @param iterable<ListenerProviderInterface> $subListenerProviders
-     *
-     * @psalm-suppress MixedPropertyTypeCoercion
      */
     public function __construct(iterable $subListenerProviders)
     {
-        $this->subListenerProviders = $subListenerProviders instanceof \Traversable
-            ? iterator_to_array($subListenerProviders)
-            : $subListenerProviders;
+        $this->subListenerProviders = $subListenerProviders;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @psalm-suppress MixedPropertyTypeCoercion
-     */
     public function getListenersForEvent(object $event): iterable
     {
         foreach ($this->subListenerProviders as $subListenerProvider) {
