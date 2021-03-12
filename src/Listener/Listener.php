@@ -9,4 +9,5 @@ interface Listener
     public function __invoke(object $event): void;
     public function match(object $event): bool;
     public function getPriority(): int;
+    public function setPriority(int $priority): void;
 }

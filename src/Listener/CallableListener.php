@@ -19,10 +19,10 @@ final class CallableListener implements Listener
     private ?string $type;
     private bool $alwaysMatching;
 
-    public function __construct(callable $callable)
+    public function __construct(callable $callable, int $priority = 0)
     {
         $this->callable = $callable;
-        $this->priority = 0;
+        $this->priority = $priority;
         $this->type = $this->extractListenerFirstParameterType($callable);
         $this->alwaysMatching = in_array($this->type, [null, 'object'], true);
     }
@@ -42,6 +42,11 @@ final class CallableListener implements Listener
     public function getPriority(): int
     {
         return $this->priority;
+    }
+
+    public function setPriority(int $priority): void
+    {
+        $this->priority = $priority;
     }
 
     private function extractListenerFirstParameterType(callable $callable): ?string

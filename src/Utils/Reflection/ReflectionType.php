@@ -13,6 +13,9 @@ use ReflectionParameter;
  */
 final class ReflectionType
 {
+    /**
+     * @throws InvalidArgumentException
+     */
     public static function findReflectionNamedType(ReflectionParameter $reflectionParameter): ?string
     {
         $reflectionType = $reflectionParameter->getType();
