@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Lium\EventDispatcher\Test\ListenerProvider;
 
-use Lium\EventDispatcher\Exception\InvalidListener;
+use Lium\EventDispatcher\Exception\InvalidListenerException;
 use Lium\EventDispatcher\ListenerProvider\DefaultListenerProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -79,7 +79,7 @@ class DefaultListenerProviderTest extends TestCase
             }
         ];
 
-        $this->expectExceptionObject(new InvalidListener($listeners[0]));
+        $this->expectExceptionObject(new InvalidListenerException($listeners[0]));
         new DefaultListenerProvider($listeners);
     }
 }
