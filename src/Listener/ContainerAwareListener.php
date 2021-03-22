@@ -6,8 +6,8 @@ namespace Lium\EventDispatcher\Listener;
 
 use InvalidArgumentException;
 use Psr\Container\ContainerInterface;
+use ReflectionException;
 use ReflectionMethod;
-use function method_exists;
 use function strpos;
 
 final class ContainerAwareListener extends ReflectionParameterListener
@@ -22,14 +22,24 @@ final class ContainerAwareListener extends ReflectionParameterListener
 
         [$this->service, $this->method] = $this->parseListenerString($listenerString);
 
-        parent::__construct(new ReflectionMethod($this->service, $this->method));
+        try {
+            $reflectionMethod = new ReflectionMethod($this->service, $this->method);
+        } catch (ReflectionException $exception) {
+            throw new InvalidArgumentException(sprintf(
+                'No method exists for class name %s and method name %s',
+                $this->service,
+                $this->method,
+            ));
+        }
+
+        parent::__construct($reflectionMethod);
     }
 
     public function __invoke(object $event): void
     {
         if ($this->container->has($this->service) === false) {
             throw new \RuntimeException(sprintf(
-                'The given %s doesn\'t contains a service identified with key %s,',
+                'The given %s doesn\'t contains any service identified with key %s,',
                 ContainerInterface::class,
                 $this->service,
             ));
@@ -54,10 +64,6 @@ final class ContainerAwareListener extends ReflectionParameterListener
         [$service, $method] = strpos($listenerString, '::') !== false
             ? explode('::', $listenerString)
             : [$listenerString, '__invoke'];
-
-        if (method_exists($service, $method) === false) {
-            throw new InvalidArgumentException();
-        }
 
         return [$service, $method];
     }

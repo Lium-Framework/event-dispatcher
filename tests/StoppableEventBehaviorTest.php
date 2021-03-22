@@ -5,29 +5,23 @@ declare(strict_types=1);
 namespace Lium\EventDispatcher\Test;
 
 use Lium\EventDispatcher\StoppableEventBehavior;
-use PHPUnit\Framework\TestCase;
 
-class StoppableEventBehaviorTest extends TestCase
-{
-    public function test_propagation_is_not_stopped_at_initialization()
-    {
-        $stoppableEvent = $this->getObjectForTrait(StoppableEventBehavior::class);
+uses()->group('stoppable-event-behavior');
 
-        $this->assertFalse($stoppableEvent->isPropagationStopped());
-    }
+beforeEach(function () {
+    $this->stoppableEvent = $this->getObjectForTrait(StoppableEventBehavior::class);
+});
 
-    public function test_propagation_is_stopped_after_call_stop_propagation_method()
-    {
-        $stoppableEvent = $this->getObjectForTrait(StoppableEventBehavior::class);
-        $stoppableEvent->stopPropagation();
+it('doesn\'t stop propagation at initialization', function () {
+    expect($this->stoppableEvent->isPropagationStopped())->toBeFalse();
+});
 
-        $this->assertTrue($stoppableEvent->isPropagationStopped());
-    }
+it('stops propagation after the call of "stopPropagation" method', function () {
+    $this->stoppableEvent->stopPropagation();
 
-    public function test_stop_propagation_method_return_self()
-    {
-        $stoppableEvent = $this->getObjectForTrait(StoppableEventBehavior::class);
+    expect($this->stoppableEvent->isPropagationStopped())->toBeTrue();
+});
 
-        $this->assertSame($stoppableEvent, $stoppableEvent->stopPropagation());
-    }
-}
+it('should return self', function () {
+    expect($this->stoppableEvent->stopPropagation())->toBe($this->stoppableEvent);
+});

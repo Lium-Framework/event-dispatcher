@@ -7,15 +7,25 @@ namespace Lium\EventDispatcher\Listener;
 use InvalidArgumentException;
 use Lium\EventDispatcher\Exception\Listener\InvalidListenerParameterTypeException;
 use Lium\EventDispatcher\Exception\Listener\ListenerWithoutParameterException;
-use Lium\EventDispatcher\Exception\Listener\NotSupportedListenerParameterTypeException;
+use Lium\EventDispatcher\Exception\Listener\UnsupportedListenerParameterTypeException;
 use Lium\EventDispatcher\Utils\Reflection\ReflectionType;
 use ReflectionFunctionAbstract;
+use function in_array;
 
 abstract class ReflectionParameterListener implements ListenerInterface
 {
-    private const SCALAR_TYPE_OBJECT = 'object';
+    public const SCALAR_TYPE_OBJECT = 'object';
 
-    private ?string $type;
+    /**
+     * @var string|null The type of the listener's first parameter. It should be either null if the type is not defined,
+     *                  the scalar type object or an event FQCN.
+     */
+    protected ?string $type;
+
+    /**
+     * @var bool True when the listener's first parameter type is not defined or is the scalar type object.
+     */
+    protected bool $eventAlwaysMatches;
 
     public function __construct(ReflectionFunctionAbstract $reflectionFunction)
     {
@@ -24,11 +34,7 @@ abstract class ReflectionParameterListener implements ListenerInterface
 
     public function match(object $event): bool
     {
-        if ($this->type === null || $this->type === self::SCALAR_TYPE_OBJECT) {
-            return true;
-        }
-
-        return $event instanceof $this->type;
+        return $this->eventAlwaysMatches || $event instanceof $this->type;
     }
 
     private function extractListenerFirstParameterType(ReflectionFunctionAbstract $reflectionFunction): ?string
@@ -41,10 +47,11 @@ abstract class ReflectionParameterListener implements ListenerInterface
         try {
             $type = ReflectionType::findReflectionNamedType($reflectionParameter);
         } catch (InvalidArgumentException $exception) {
-            throw new NotSupportedListenerParameterTypeException();
+            throw new UnsupportedListenerParameterTypeException();
         }
 
-        if ($type !== self::SCALAR_TYPE_OBJECT && $reflectionParameter->getClass() === null) {
+        $this->eventAlwaysMatches = in_array($type, [null, self::SCALAR_TYPE_OBJECT], true);
+        if ($this->eventAlwaysMatches === false && $reflectionParameter->getClass() === null) {
             throw new InvalidListenerParameterTypeException();
         }
 
