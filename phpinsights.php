@@ -62,13 +62,21 @@ return [
     ],
 
     'remove' => [
-        //  ExampleInsight::class,
+        \SlevomatCodingStandard\Sniffs\Classes\SuperfluousExceptionNamingSniff::class,
+        \SlevomatCodingStandard\Sniffs\Classes\SuperfluousInterfaceNamingSniff::class,
+        \SlevomatCodingStandard\Sniffs\Classes\SuperfluousAbstractClassNamingSniff::class,
     ],
 
     'config' => [
-        //  ExampleInsight::class => [
-        //      'key' => 'value',
-        //  ],
+        \PHP_CodeSniffer\Standards\Generic\Sniffs\Files\LineLengthSniff::class => [
+            'lineLimit' => 120,
+            'absoluteLineLimit' => 120,
+            'ignoreComments' => false,
+        ],
+        \PhpCsFixer\Fixer\Import\OrderedImportsFixer::class => [
+            'imports_order' => ['class', 'const', 'function'],
+            'sort_algorithm' => 'alpha', // possible values ['alpha', 'length', 'none']
+        ],
     ],
 
 ];

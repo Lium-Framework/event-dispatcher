@@ -4,33 +4,33 @@ declare(strict_types=1);
 
 namespace Lium\EventDispatcher\Test\ListenerProvider;
 
-use Lium\EventDispatcher\Exception\InvalidListener;
-use Lium\EventDispatcher\ListenerProvider\DefaultListenerProvider;
+use Lium\EventDispatcher\Exception\Listener\ListenerWithoutParameterException;
+use Lium\EventDispatcher\ListenerProvider\CallableListenerProvider;
 use PHPUnit\Framework\TestCase;
 
-class DefaultListenerProviderTest extends TestCase
+class CallableListenerProviderTest extends TestCase
 {
     /** @test */
-    public function MUST_treats_parent_types_identically_to_the_own_type_of_the_Event()
+    public function MUST_treats_parent_types_identically_to_the_own_type_of_the_Event(): void
     {
         $listeners = [
             function (A $a) {
             },
         ];
 
-        $listenerProvider = new DefaultListenerProvider($listeners);
+        $listenerProvider = new CallableListenerProvider($listeners);
 
         $result = $listenerProvider->getListenersForEvent(new B());
 
         $this->assertSame(
             $listeners,
             $result instanceof \Traversable ? iterator_to_array($result) : $result,
-            'The DefaultListenerProvider did not treats parent types identically to the own Event\'t type'
+            'The CallableListenerProvider did not treats parent types identically to the own Event\'t type'
         );
     }
 
     /** @test */
-    public function each_Listeners_MUST_be_type_compatible_with_the_Event()
+    public function each_Listeners_MUST_be_type_compatible_with_the_Event(): void
     {
         $listeners = [
             function (object $object) {
@@ -43,7 +43,7 @@ class DefaultListenerProviderTest extends TestCase
             },
         ];
 
-        $listenerProvider = new DefaultListenerProvider($listeners);
+        $listenerProvider = new CallableListenerProvider($listeners);
 
         $event = new B();
         $result = $listenerProvider->getListenersForEvent($event);
@@ -60,27 +60,27 @@ class DefaultListenerProviderTest extends TestCase
         }
     }
 
-    public function test_get_listeners_for_event_match()
+    public function test_get_listeners_for_event_match(): void
     {
         $listeners = [
             function (\stdClass $event) {
             }
         ];
 
-        $listenerProvider = new DefaultListenerProvider($listeners);
+        $listenerProvider = new CallableListenerProvider($listeners);
 
         $this->assertSame($listeners, $listenerProvider->getListenersForEvent(new \stdClass));
     }
 
-    public function test_get_listeners_for_event_with_listener_without_parameters()
+    public function test_get_listeners_for_event_with_listener_without_parameters(): void
     {
         $listeners = [
             function () {
             }
         ];
 
-        $this->expectExceptionObject(new InvalidListener($listeners[0]));
-        new DefaultListenerProvider($listeners);
+        $this->expectExceptionObject(new ListenerWithoutParameterException());
+        new CallableListenerProvider($listeners);
     }
 }
 

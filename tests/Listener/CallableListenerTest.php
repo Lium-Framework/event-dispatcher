@@ -2,15 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Lium\EventDispatcher\Test;
+namespace Lium\EventDispatcher\Test\Listener;
 
-use Lium\EventDispatcher\Listener;
+use Lium\EventDispatcher\Listener\CallableListener;
 use Lium\EventDispatcher\Test\Stub\ListenerWithStaticMethod;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 use TypeError;
 
-final class ListenerTest extends TestCase
+/**
+ * @group listener
+ */
+final class CallableListenerTest extends TestCase
 {
     public function listenerProvider(): iterable
     {
@@ -38,10 +41,10 @@ final class ListenerTest extends TestCase
     {
         if ($expectedException !== null) {
             $this->expectException($expectedException);
+        } else {
+            $this->expectNotToPerformAssertions();
         }
 
-        $listener = new Listener($callable);
-
-        $this->assertInstanceOf(Listener::class, $listener);
+        new CallableListener($callable);
     }
 }

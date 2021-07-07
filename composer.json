@@ -12,13 +12,17 @@
     ],
     "require": {
         "php": "^7.4",
-        "psr/event-dispatcher": "^1.0"
+        "psr/event-dispatcher": "^1.0",
+        "psr/container": "^1.1"
     },
     "require-dev": {
-        "nunomaduro/phpinsights": "^1.11",
-        "phpunit/phpunit": "^8.3",
+        "nunomaduro/phpinsights": "^1.14",
+        "pestphp/pest": "^1.0",
         "symfony/var-dumper": "^5.0",
         "vimeo/psalm": "^4.6"
+    },
+    "suggest": {
+        "fig/event-dispatcher-util": "Provide some utilities to work with the PSR-14"
     },
     "autoload": {
         "psr-4": {
