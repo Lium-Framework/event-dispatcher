@@ -16,7 +16,7 @@
     },
     "require-dev": {
         "nunomaduro/phpinsights": "^2.0",
-        "phpunit/phpunit": "^9.0",
+        "phpunit/phpunit": "^8.3 || ^9.0",
         "symfony/var-dumper": "^5.0",
         "vimeo/psalm": "^4.6"
     },
