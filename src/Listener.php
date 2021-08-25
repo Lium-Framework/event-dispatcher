@@ -21,11 +21,10 @@ final class Listener
         $reflectionParameter = $this->extractReflectionParameter($callable);
 
         $reflectionType = $reflectionParameter->getType();
-        if ($reflectionType !== null) {
-            $this->type = $reflectionType->getName();
-            if ($this->type !== 'object' && $reflectionParameter->getClass() === null) {
-                throw new InvalidListener($callable);
-            }
+        assert($reflectionType instanceof \ReflectionNamedType);
+        $this->type = $reflectionType->getName();
+        if ($this->type !== 'object' && !class_exists($this->type)) {
+            throw new InvalidListener($callable);
         }
 
         $this->alwaysMatching = \in_array($this->type, [null, 'object'], true);
