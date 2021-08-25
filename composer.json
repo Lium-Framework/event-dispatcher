@@ -15,8 +15,8 @@
         "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {
-        "nunomaduro/phpinsights": "^1.11",
-        "phpunit/phpunit": "^8.3",
+        "nunomaduro/phpinsights": "^2.0",
+        "phpunit/phpunit": "^9.0",
         "symfony/var-dumper": "^5.0",
         "vimeo/psalm": "^4.6"
     },
