@@ -23,7 +23,7 @@ final class Listener
         $reflectionType = $reflectionParameter->getType();
         assert($reflectionType instanceof \ReflectionNamedType);
         $this->type = $reflectionType->getName();
-        if ($this->type !== 'object' && !class_exists($this->type)) {
+        if (!$this->isValidType($this->type)) {
             throw new InvalidListener($callable);
         }
 
@@ -51,5 +51,13 @@ final class Listener
         }
 
         return $reflectionParameter;
+    }
+
+    private function isValidType(string $type):bool
+    {
+        if ($type === 'object') {
+            return true;
+        }
+        return class_exists($type) || interface_exists($type);
     }
 }
